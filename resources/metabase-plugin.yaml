@@ -12,18 +12,21 @@ driver:
   lazy-load: true
   parent: sql-jdbc
   connection-properties:
-    - dbname
     - merge:
         - host
         - default: localhost
     - merge:
         - port
         - default: 6875
-    - user
-    - password
+    - merge:
+        - user
+        - default: default
+    - merge:
+        - password
+        - default: default
   connection-properties-include-tunnel-config: false
 init:
   - step: load-namespace
     namespace: metabase.driver.materialize
   - step: register-jdbc-driver
-    class: mzjdbc
+    class: org.postgres.Driver

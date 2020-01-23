@@ -6,17 +6,18 @@
 
 (driver/register! :materialize, :parent :postgres)
 
-;;; +----------------------------------------------------------------------------------------------------------------+
-;;; |                                         metabase.driver.sql-jdbc impls                                         |
-;;; +----------------------------------------------------------------------------------------------------------------+
-
+; ;;; +----------------------------------------------------------------------------------------------------------------+
+; ;;; |                                         metabase.driver.sql-jdbc impls                                         |
+; ;;; +----------------------------------------------------------------------------------------------------------------+
+;
 (defmethod sql-jdbc.conn/connection-details->spec :materialize
-  [_ {:keys [host port db], :as opts}]
-  (merge
-   {:classname                     "org.postgresql.Driver"
-    :subprotocol                   "pgwire"
-    :subname                       (str "//" host ":" port "/" db)
-    :ssl                           false
-    :OpenSourceSubProtocolOverride false}
-   (dissoc opts :host :port :db)))
+  [_ {:keys [host port user password], :as opts}]
+  (println "in connection details")
 
+  (merge
+   {:classname                     "org.postgres.Driver"
+    :subprotocol                   "postgres"
+    :subname                       (str "//" host ":" port "/")
+    :ssl                           false
+    :use_server_time_zone_for_dates true}
+   (dissoc opts :host :port :user :password)))
