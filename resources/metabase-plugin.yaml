@@ -29,4 +29,4 @@ init:
   - step: load-namespace
     namespace: metabase.driver.materialize
   - step: register-jdbc-driver
-    class: org.materialize.Driver
+    class: io.materialize.Driver
