@@ -1,15 +1,10 @@
 (defproject metabase/materialize-driver "0.0.1-SNAPSHOT"
   :description "Metabase Materialized Driver"
 
-  :plugins [[reifyhealth/lein-git-down "0.3.5"]]
-  :middleware [lein-git-down.plugin/inject-properties]
-
   :dependencies
-  [[mzjdbc "4b28590f9795c717e246cd5a84cacca5f8198993"]]
+  [[clojure.java-time "0.3.2"]]
 
-  :repositories [["public-github" {:url "git://github.com"}]]
-  :git-down {mzjdbc {:coordinates MaterializeInc/pgjdbc}}
-
+  :aot :all     ; Checks for compile-time failures when building the uberjar
   :profiles
   {:provided
    {:dependencies [[metabase-core "1.0.0-SNAPSHOT"]]
