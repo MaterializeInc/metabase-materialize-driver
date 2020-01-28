@@ -14,9 +14,30 @@
 ; ;;; |                                         metabase.driver.sql-jdbc impls                                         |
 ; ;;; +----------------------------------------------------------------------------------------------------------------+
 
+(defn- make-subname [host port db]
+  (str "//" host ":" port "/"))
+
+(defn materialize
+  "Create a Clojure JDBC database specification for Materialize."
+  [{:keys [host port db]
+    :or   {host "localhost", port 6875, db ""}
+    :as   opts}]
+  (merge
+   {:classname                     "io.materialize.Driver"
+    :subprotocol                   "materialize"
+    :subname                       (make-subname host (or port 6875) db)}
+   (dissoc opts :host :port :db)))
+
+
 (defmethod sql-jdbc.conn/connection-details->spec :materialize [_ {ssl? :ssl, :as details-map}]
   (-> details-map
-
+      (update :port (fn [port]
+                      (if (string? port)
+                        (Integer/parseInt port)
+                        port)))
+      ;; remove :ssl in case it's false; DB will still try (& fail) to connect if the key is there
+      (dissoc :ssl)
+      (merge {:sslmode "disable"})
       (set/rename-keys {:dbname :db})
-      db.spec/postgres
+      materialize
       (sql-jdbc.common/handle-additional-options details-map)))
