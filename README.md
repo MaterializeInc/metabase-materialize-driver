@@ -26,15 +26,8 @@ to connect:
 ### With Docker
 
 To generate a Metabase Docker image containing the Materialize driver,
-use [our Dockerfile](Dockerfile):
-```shell script
-FROM metabase/metabase:latest
-ADD https://github.com/MaterializeInc/metabase-materialize-driver/releases/download/0.0.1/materialize-driver-0.0.1-SNAPSHOT-standalone.jar /plugins/
-RUN chmod 744 /plugins/materialize-driver-0.0.1-SNAPSHOT-standalone.jar
-```
-
-And run the following from your terminal to generate an image with
-the tag `metabase-with-materialize:latest`:
+use [our Dockerfile](Dockerfile) and run the following command
+from your terminal: 
 ```shell script
 cd /path/to/metabase-materialize-driver
 docker build -f Dockerfile -t metabase-with-materialize .
