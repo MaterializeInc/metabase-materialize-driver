@@ -53,7 +53,7 @@ you can connect by substituting the following connection information:**
 
 | Field             | Value                |
 | ----------------- |:--------------------:|
-| Host              | host.docker.internal |
+| Host              | [host.docker.internal](https://stackoverflow.com/questions/24319662/from-inside-of-a-docker-container-how-do-i-connect-to-the-localhost-of-the-mach/24326540#24326540) |
 
 
 ### Without Docker
