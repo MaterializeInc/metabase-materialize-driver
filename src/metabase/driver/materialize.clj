@@ -15,17 +15,17 @@
 ; ;;; +----------------------------------------------------------------------------------------------------------------+
 
 (defn- make-subname [host port db]
-  (str "//" host ":" port "/"))
+  (str "//" host ":" port "/" db))
 
 (defn materialize
   "Create a Clojure JDBC database specification for Materialize."
   [{:keys [host port db]
-    :or   {host "localhost", port 6875, db ""}
+    :or   {host "localhost", port 6875, db "materialize"}
     :as   opts}]
   (merge
    {:classname                     "io.materialize.Driver"
     :subprotocol                   "materialize"
-    :subname                       (make-subname host (or port 6875) db)}
+    :subname                       (make-subname host port db)}
    (dissoc opts :host :port :db)))
 
 
