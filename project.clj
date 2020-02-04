@@ -1,4 +1,4 @@
-(defproject metabase/materialize-driver "0.0.1-SNAPSHOT"
+(defproject metabase/materialize-driver "0.0.3-SNAPSHOT"
   :description "Metabase Materialized Driver"
 
   :dependencies
