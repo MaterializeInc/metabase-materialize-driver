@@ -19,6 +19,9 @@ driver:
         - port
         - default: 6875
     - merge:
+        - dbname
+        - default: materialize
+    - merge:
         - user
         - default: default
     - merge:
