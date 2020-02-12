@@ -14,7 +14,7 @@ driver automatically! (For deployment-specific details, please consult the
 following sections.)
 
 Once the Materialize driver is registered, use the following information to
-connect: 
+connect:
 
 | Field             | Value     |
 | ----------------- |:---------:|
@@ -58,14 +58,14 @@ Use this driver in two steps:
    curl -L "https://github.com/MaterializeInc/metabase-materialize-driver/releases/download/0.0.1/materialize-driver-0.0.1-SNAPSHOT-standalone.jar" -o materialize-driver-0.0.1-SNAPSHOT-standalone.jar
    ```
 1. Move the downloaded copy of the driver (from the previous step) into the
-   `/plugins` directory of your Metabase instance. 
+   `/plugins` directory of your Metabase instance.
 
 For more info, check out these resources:
 * [Managing databases in
   Metabase](https://www.metabase.com/docs/latest/administration-guide/01-managing-databases.html)
 * [Driver plugins in
   Metabase](https://github.com/metabase/metabase/wiki/Writing-a-Driver:-Packaging-a-Driver-&-Metabase-Plugin-Basics)
-  
+
 
 ## To Build the Driver
 
@@ -86,14 +86,14 @@ To use the forked Driver, we go through the following steps:
 
     ```shell script
     mvn clean && mvn package -DskipTests -Dmaven.javadoc.skip=true -P release-artifacts
-    ``` 
+    ```
 
 1. Check out this repo locally and move the resulting jar into the `/src`
    folder.
 
     ```shell script
     mv /path/to/postgresql-1-MZ-SNAPSHOT.jar /path/to/metabase-materialize-driver/src/
-    ``` 
+    ```
 
 1. Extract the files from the jarfile **into** the `/src` directory.
 
@@ -106,7 +106,7 @@ To use the forked Driver, we go through the following steps:
     rm -rf /path/to/metabase-materialize-driver/src/META-INF/
     ```
 
-### Step 2: Build and move the metabase-materialize-driver 
+### Step 2: Build and move the metabase-materialize-driver
 
 1. Once we've successfully completed copying over the code from the forked
    Driver, we're ready to build the `metabase-materialize-driver`.
@@ -116,7 +116,7 @@ To use the forked Driver, we go through the following steps:
     lein clean && lein uberjar
     ```
     When the `uberjar` command finishes executing, it will output the path to
-    the newly created uberjar like: 
+    the newly created uberjar like:
 
     ```shell script
     Compiling metabase.driver.materialize
