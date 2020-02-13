@@ -31,12 +31,12 @@ Dockerfile](Dockerfile) and run the following command from your terminal:
 
 ```shell script
 cd /path/to/metabase-materialize-driver
-docker build -f Dockerfile -t metabase-with-materialize .
+bin/build-docker.sh
 ```
 
 Then, to start the container, run:
 ```shell script
-docker run --rm -p 3000:3000 --name metabase metabase-with-materialize:latest
+docker run --rm -p 3000:3000 --name metabase materialize/metabase:latest
 ```
 
 Once it's finished loading, you can access Metabase at <localhost:3000>.
@@ -55,16 +55,17 @@ Use this driver in two steps:
 
 1. Download a copy of the driver by running:
    ```shell script
-   curl -L "https://github.com/MaterializeInc/metabase-materialize-driver/releases/download/0.0.1/materialize-driver-0.0.1-SNAPSHOT-standalone.jar" -o materialize-driver-0.0.1-SNAPSHOT-standalone.jar
+   bin/build.sh --release v0.0.5 --no-docker
    ```
-1. Move the downloaded copy of the driver (from the previous step) into the
+   or visiting the [releases](./releases) page and downloading one of the
+   jars
+
+1. Move the downloaded copy of the plugin (from the previous step) into the
    `/plugins` directory of your Metabase instance.
 
 For more info, check out these resources:
-* [Managing databases in
-  Metabase](https://www.metabase.com/docs/latest/administration-guide/01-managing-databases.html)
-* [Driver plugins in
-  Metabase](https://github.com/metabase/metabase/wiki/Writing-a-Driver:-Packaging-a-Driver-&-Metabase-Plugin-Basics)
+* [Managing databases in Metabase](https://www.metabase.com/docs/latest/administration-guide/01-managing-databases.html)
+* [Driver plugins in Metabase](https://github.com/metabase/metabase/wiki/Writing-a-Driver:-Packaging-a-Driver-&-Metabase-Plugin-Basics)
 
 
 ## To Build the Driver
@@ -81,7 +82,7 @@ fork](https://github.com/MaterializeInc/pgjdbc) to provide the underlying SQL
 Driver.
 
 To use the forked Driver, we go through the following steps:
-1. Check out the forked `pgjdbc` repo locally.
+1. Check out the forked `MaterializeInc/pgjdbc` repo locally.
 1. Build a shaded jar with:
 
     ```shell script
