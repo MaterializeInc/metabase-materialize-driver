@@ -3,7 +3,7 @@
 set -euo pipefail
 
 usage() {
-    echo "usage: $0 [--release [VERSION]] [--build]
+    echo "usage: $0 [--release [VERSION]] [--mbv VERSION] [--build]
 
 Build a docker image.
 
@@ -11,6 +11,7 @@ Options:
 
     --release            Pull from the current tagged release in github
     --release VERSION    Pull VERSION from the tagged release in github
+    --mbv VERSION        Specify a metabase version, default is latest. Required for --release
     --build              Build the jar and create a docker image from using that
     --no-docker          Don't run docker build"
 
@@ -25,6 +26,7 @@ NOW="$(date +%Y%m%d_%H%M%S)"
 # options
 RELEASE=n
 VERSION=_
+METABASE_VERSION=latest
 BUILD=n
 DOCKER=y
 
@@ -40,6 +42,7 @@ main() {
              -t materialize/metabase:"$NOW" \
              -t materialize/metabase:"$VERSION" \
              -t materialize/metabase:latest \
+             --build-arg METABASE_VERSION="$METABASE_VERSION" \
              .
     fi
 }
@@ -54,6 +57,13 @@ parse_args() {
                 if [[ ${1:-_} =~ ^.+\..+\..+ ]]; then
                     VERSION="$1" && shift
                 fi
+                ;;
+            --mbv)
+                if [[ $# -eq 0 ]]; then
+                    echo "--mbv requires a VERSION"
+                    usage 1
+                fi
+                METABASE_VERSION="$1" && shift
                 ;;
             --build)
                 BUILD=y
@@ -72,6 +82,11 @@ parse_args() {
     done
     if [[ $RELEASE == y && $BUILD == y ]]; then
         echo "error: --release and --build don't make sense together"
+        exit 1
+    fi
+    if [[ $RELEASE == y && $METABASE_VERSION == latest ]]; then
+        echo "error: --mbv is required for --release"
+        exit 1
     fi
 }
 
