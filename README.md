@@ -8,7 +8,11 @@ The `metabase-materialize-driver` lets
 
 ## To Use the Driver
 
-To use the `metabase-materialize-driver`, copy the driver's `.jar` file into the
+We provide a pre-built docker image of metabase including this driver as
+[materialize/metabase][]
+
+To use the `metabase-materialize-driver` with an existing Metabase
+installation, copy a `.jar` file from one of our [releases][] into the
 `/plugins` directory of your Metabase instance. Metabase will register the
 driver automatically! (For deployment-specific details, please consult the
 following sections.)
@@ -22,6 +26,9 @@ connect:
 | Port              | 6875      |
 | Database username | default   |
 | Database password | default   |
+
+[releases]: https://github.com/MaterializeInc/metabase-materialize-driver/releases
+[materialize/metabase]: https://hub.docker.com/repository/docker/materialize/metabase
 
 
 ### With Docker
