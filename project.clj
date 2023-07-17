@@ -1,4 +1,4 @@
-(defproject metabase/materialize-driver "0.0.5-SNAPSHOT"
+(defproject metabase/materialize-driver "0.1.0-SNAPSHOT"
   :description "Metabase Materialized Driver"
 
   :dependencies
@@ -9,7 +9,7 @@
   {:provided
    {:dependencies [[metabase-core "1.0.0-SNAPSHOT"]]
 
-   :uberjar
+    :uberjar
     {:auto-clean     true
      :aot            :all
      :javac-options  ["-target" "1.8", "-source" "1.8"]

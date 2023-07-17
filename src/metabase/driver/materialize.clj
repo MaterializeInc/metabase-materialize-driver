@@ -1,7 +1,7 @@
 (ns metabase.driver.materialize
   "Metabase Materialize Driver."
   (:require [clojure
-              [set :as set]]
+             [set :as set]]
             [metabase.db.spec :as db.spec]
             [metabase.driver :as driver]
             [metabase.driver.sql-jdbc

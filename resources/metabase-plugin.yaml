@@ -1,12 +1,9 @@
 # Reference: https://github.com/metabase/metabase/wiki/Metabase-Plugin-Manifest-Reference
 info:
   name: Metabase Materialize Driver
-  # Include JDBC driver version too?
-  version: 0.0.5-SNAPSHOT
+  version: 0.1.0-SNAPSHOT
   description: Allows Metabase to connect to Materialize.
 driver:
-  # Name of the driver; corresponds to the keyword (e.g. :sqlite) used
-  # in the codebase
   name: materialize
   display-name: Materialize
   lazy-load: true
@@ -32,4 +29,4 @@ init:
   - step: load-namespace
     namespace: metabase.driver.materialize
   - step: register-jdbc-driver
-    class: io.materialize.Driver
+    class: org.postgresql.Driver
