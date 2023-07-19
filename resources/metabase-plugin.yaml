@@ -17,7 +17,7 @@ driver:
         - port
         - default: 6875
     - name: dbname
-      display-name: Databases
+      display-name: Database
       placeholder: materialize
     - name: user
       display-name: Username
