@@ -103,7 +103,7 @@ the driver, stick to `How to use the driver` above.**
    our local copy of Metabase:
 
     ```shell script
-    cp /path/to/metabase-materialize-driver/target/ materialize-driver-0.0.1-SNAPSHOT-standalone.jar /path/to/metabase/plugins/
+    cp /path/to/metabase-materialize-driver/target/ materialize-driver-0.1.0-SNAPSHOT-standalone.jar /path/to/metabase/plugins/
     ```
 
 Once the `metabase-materialize-driver` jar is in the `/plugins` directory,
