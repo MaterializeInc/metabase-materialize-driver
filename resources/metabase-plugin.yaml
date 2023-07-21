@@ -1,35 +1,32 @@
 # Reference: https://github.com/metabase/metabase/wiki/Metabase-Plugin-Manifest-Reference
 info:
   name: Metabase Materialize Driver
-  # Include JDBC driver version too?
-  version: 0.0.5-SNAPSHOT
+  version: 0.1.0-SNAPSHOT
   description: Allows Metabase to connect to Materialize.
 driver:
-  # Name of the driver; corresponds to the keyword (e.g. :sqlite) used
-  # in the codebase
   name: materialize
   display-name: Materialize
   lazy-load: true
   parent: postgres
   connection-properties:
-    - merge:
-        - host
-        - default: materialized
+    - name: host
+      display-name: Host
+      placeholder: name.materialize.cloud
+      helper-text: The Materialize region to connect to.
     - merge:
         - port
         - default: 6875
-    - merge:
-        - dbname
-        - default: materialize
-    - merge:
-        - user
-        - default: default
-    - merge:
-        - password
-        - default: default
-  connection-properties-include-tunnel-config: false
+    - name: dbname
+      display-name: Database
+      placeholder: materialize
+    - name: user
+      display-name: Username
+      placeholder: materialize
+      helper-text: Your Materialize user name.
+    - password
+    - ssl
 init:
   - step: load-namespace
     namespace: metabase.driver.materialize
   - step: register-jdbc-driver
-    class: io.materialize.Driver
+    class: com.materialize.jdbc.MaterializeDriver
