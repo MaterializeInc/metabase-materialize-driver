@@ -25,14 +25,11 @@
                              :type/Boolean        "BOOL"
                              :type/Date           "DATE"
                              :type/DateTime       "TIMESTAMP"
-                             :type/DateTimeWithTZ "TIMESTAMP WITH TIME ZONE"
                              :type/Decimal        "DECIMAL"
                              :type/Float          "FLOAT"
                              :type/Integer        "INTEGER"
-                             :type/IPAddress      "INET"
                              :type/Text           "TEXT"
                              :type/Time           "TIME"
-                             :type/TimeWithTZ     "TIME WITH TIME ZONE"
                              :type/UUID           "UUID"}]
   (defmethod sql.tx/field-base-type->sql-type [:materialize base-type] [_ _] db-type))
 
@@ -41,6 +38,7 @@
   (merge
    {:host     (tx/db-test-env-var-or-throw :materialize :host "localhost")
     :port     (tx/db-test-env-var-or-throw :materialize :port 6875)
+    :ssl      false
     :timezone :America/Los_Angeles}
    (when-let [user (tx/db-test-env-var :materialize :user)]
      {:user user})
@@ -62,9 +60,3 @@
 
 (defmethod load-data/load-data! :materialize [& args]
   (apply load-data/load-data-all-at-once! args))
-
-(defmethod sql.tx/standalone-column-comment-sql :materialize [& args]
-  (apply sql.tx/standard-standalone-column-comment-sql args))
-
-(defmethod sql.tx/standalone-table-comment-sql :materialize [& args]
-  (apply sql.tx/standard-standalone-table-comment-sql args))
