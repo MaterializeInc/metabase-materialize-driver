@@ -2,5 +2,4 @@
  ["src" "resources"]
 
  :deps
- {com.materialize/materialize-jdbc$http
-  {:mvn/version "0.4.6"}}}
+ {org.postgresql/postgresql {:mvn/version "42.2.23"}}}
