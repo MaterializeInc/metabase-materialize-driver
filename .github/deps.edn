@@ -1,0 +1,4 @@
+{:aliases
+ {:user/materialize
+  {:extra-paths ["PWD/modules/drivers/materialize/test"]
+   :extra-deps  {metabase/materialize {:local/root "PWD/modules/drivers/materialize"}}}}}

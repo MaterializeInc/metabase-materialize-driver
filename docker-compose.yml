@@ -1,0 +1,20 @@
+---
+version: "3.9"
+
+services:
+  materialize:
+    image: materialize/materialized:latest
+    container_name: materialize
+    command:
+      - --availability-zone=test1
+      - --availability-zone=test2
+    ports:
+      - 6875:6875
+      - 6877:6877
+      - 6878:6878
+    healthcheck:
+      {
+        test: curl -f localhost:6878/api/readyz,
+        interval: 1s,
+        start_period: 35s,
+      }
