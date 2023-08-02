@@ -29,4 +29,5 @@ init:
   - step: load-namespace
     namespace: metabase.driver.materialize
   - step: register-jdbc-driver
-    class: com.materialize.jdbc.MaterializeDriver
+    class: org.postgresql.Driver
+    # class: com.materialize.jdbc.MaterializeDriver

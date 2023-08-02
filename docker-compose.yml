@@ -18,3 +18,10 @@ services:
         interval: 1s,
         start_period: 35s,
       }
+  init:
+    image: postgres:15.3-alpine3.18
+    depends_on:
+      - materialize
+    command: sh -c 'echo "Waiting for materialized to start..." && sleep 15 && psql -h materialize -U mz_system -d materialize -p 6877 -c "ALTER SYSTEM SET max_tables = 1000;"'
+    environment:
+      - PGPASSWORD=materialize

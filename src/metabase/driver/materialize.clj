@@ -11,6 +11,16 @@
 
 (driver/register! :materialize, :parent :postgres)
 
+;;; +----------------------------------------------------------------------------------------------------------------+
+;;; |                                          metabase.driver method impls                                          |
+;;; +----------------------------------------------------------------------------------------------------------------+
+
+(doseq [[feature supported?] {:foreign-keys              false
+                              :set-timezone              false
+                              ;; :datetime-diff             true
+                              :test/jvm-timezone-setting false}]
+  (defmethod driver/database-supports? [:materialize feature] [_driver _feature _db] supported?))
+
 ; ;;; +----------------------------------------------------------------------------------------------------------------+
 ; ;;; |                                         metabase.driver.sql-jdbc impls                                         |
 ; ;;; +----------------------------------------------------------------------------------------------------------------+
@@ -29,3 +39,5 @@
 (defmethod driver/describe-table :materialize
   [driver database table]
   (sql-jdbc.sync/describe-table driver database table))
+
+(defmethod sql-jdbc.sync/excluded-schemas :materialize [_driver] #{"mz_catalog" "mz_internal" "pg_catalog"})

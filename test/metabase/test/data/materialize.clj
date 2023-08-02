@@ -1,15 +1,27 @@
 (ns metabase.test.data.materialize
   "Test extensions for the Materialize driver.  Includes logic for creating/destroying test datasets, building
   the connection specs from environment variables, etc."
-  (:require [metabase.test.data.interface :as tx]
-            [metabase.test.data.sql :as sql.tx]
-            [metabase.test.data.sql-jdbc :as sql-jdbc.tx]
-            [metabase.test.data.sql-jdbc.load-data :as load-data]
-            [metabase.test.data.sql.ddl :as ddl]))
+  (:require
+   [clojure.string :as str]
+   [metabase.config :as config]
+   [metabase.driver :as driver]
+   [metabase.driver.ddl.interface :as ddl.i]
+   [metabase.test.data.interface :as tx]
+   [metabase.test.data.sql :as sql.tx]
+   [metabase.test.data.sql-jdbc.execute :as execute]
+   [metabase.test.data.sql-jdbc.load-data :as load-data]
+   [metabase.test.data.sql.ddl :as ddl]
+   [metabase.util.log :as log]))
 
-(sql-jdbc.tx/add-test-extensions! :materialize)
+(set! *warn-on-reflection* true)
 
-(defmethod sql.tx/pk-sql-type :materialize [_] "SERIAL")
+;; (sql-jdbc.tx/add-test-extensions! :materialize)
+
+(defmethod driver/database-supports? [:materialize :foreign-keys] [_driver _feature _db] (not config/is-test?))
+
+(defmethod ddl/drop-db-ddl-statements :materialize
+  [& args]
+  (apply (get-method ddl/drop-db-ddl-statements :sql-jdbc/test-extensions) args))
 
 (defmethod tx/aggregate-column-info :materialize
   ([driver ag-type]
@@ -38,8 +50,7 @@
   (merge
    {:host     (tx/db-test-env-var-or-throw :materialize :host "localhost")
     :port     (tx/db-test-env-var-or-throw :materialize :port 6875)
-    :ssl      false
-    :timezone :America/Los_Angeles}
+    :ssl      (tx/db-test-env-var :materialize :ssl false)}
    (when-let [user (tx/db-test-env-var :materialize :user)]
      {:user user})
    (when-let [password (tx/db-test-env-var :materialize :password)]
@@ -47,16 +58,62 @@
    (when (= context :db)
      {:db database-name})))
 
-(defmethod ddl/drop-db-ddl-statements :materialize
-  [driver {:keys [database-name], :as dbdef} & options]
-  (when-not (string? database-name)
-    (throw (ex-info (format "Expected String database name; got ^%s %s"
-                            (some-> database-name class .getCanonicalName) (pr-str database-name))
-                    {:driver driver, :dbdef dbdef})))
-  ;; add an additional statement to the front to kill open connections to the DB before dropping
-  (cons
-   (kill-connections-to-db-sql database-name)
-   (apply (get-method ddl/drop-db-ddl-statements :sql-jdbc/test-extensions) :materialize dbdef options)))
+(defmethod sql.tx/drop-table-if-exists-sql :materialize
+  [driver {:keys [database-name]} {:keys [table-name]}]
+  (format "DROP TABLE IF EXISTS \"%s\".\"%s\".\"%s\""
+          (ddl.i/format-name driver database-name)
+          "public"
+          (ddl.i/format-name driver table-name)))
+
+(defmethod sql.tx/create-db-sql :materialize
+  [driver {:keys [database-name]}]
+  (format "CREATE DATABASE \"%s\";" (ddl.i/format-name driver database-name)))
+(defmethod sql.tx/drop-db-if-exists-sql :materialize
+  [driver {:keys [database-name]}]
+  (format "DROP DATABASE IF EXISTS \"%s\";" (ddl.i/format-name driver database-name)))
+
+;; (defmethod sql.tx/create-db-sql         :materialize [_ _] nil)
+
+
+(defmethod sql.tx/add-fk-sql :materialize [& _] nil)
+
+(defmethod execute/execute-sql! :materialize [& args]
+  (apply execute/sequentially-execute-sql! args))
+
+;; (defmethod sql.tx/create-table-sql :materialize
+;;   [driver {:keys [database-name]} {:keys [table-name fields]}]
+;;   (let [table-name (ddl.i/format-name driver table-name)
+;;         fields (map (fn [{:keys [name type]}]
+;;                       (format "\"%s\" %s" (ddl.i/format-name driver name) (sql.tx/field-base-type->sql-type driver type)))
+;;                     fields)]
+;;     (format "CREATE TABLE \"%s\".\"%s\".\"%s\" (%s);"
+;;             (ddl.i/format-name driver database-name)
+;;             "public"
+;;             table-name
+;;             (str/join ", " fields))))
+(defmethod sql.tx/pk-sql-type :materialize [_] "INTEGER")
+
+(defmethod sql.tx/create-table-sql :materialize
+  [driver dbdef tabledef]
+  (let [tabledef (update tabledef :field-definitions (fn [field-defs]
+                                                       (for [field-def field-defs]
+                                                         (dissoc field-def :not-null?))))
+        ;; strip out the PRIMARY KEY stuff from the CREATE TABLE statement
+        sql      ((get-method sql.tx/create-table-sql :sql/test-extensions) driver dbdef tabledef)]
+    (str/replace sql #", PRIMARY KEY \([^)]+\)" "")))
 
 (defmethod load-data/load-data! :materialize [& args]
-  (apply load-data/load-data-all-at-once! args))
+  (apply load-data/load-data-add-ids-chunked! args))
+
+
+(defmethod tx/sorts-nil-first? :materialize
+  [_driver _base-type]
+  false)
+
+(defmethod tx/supports-time-type? :materialize
+  [_driver]
+  false)
+
+(defmethod tx/supports-timestamptz-type? :materialize
+  [_driver]
+  false)
