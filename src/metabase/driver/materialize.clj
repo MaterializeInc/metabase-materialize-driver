@@ -17,7 +17,8 @@
 
 (doseq [[feature supported?] {:foreign-keys              false
                               :set-timezone              false
-                              ;; :datetime-diff             true
+                              :datetime-diff             false
+                              :convert-timezone          false
                               :test/jvm-timezone-setting false}]
   (defmethod driver/database-supports? [:materialize feature] [_driver _feature _db] supported?))
 
