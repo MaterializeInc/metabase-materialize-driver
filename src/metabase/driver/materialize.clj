@@ -22,6 +22,9 @@
                               :convert-timezone          false
                               :nested-queries            false
                               :expressions               false
+                              :persist-models            false
+                              :time-interval             false
+                              :percentile-aggregations   false
                               :test/jvm-timezone-setting false}]
   (defmethod driver/database-supports? [:materialize feature] [_driver _feature _db] supported?))
 
