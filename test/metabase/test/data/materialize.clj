@@ -79,17 +79,6 @@
 (defmethod execute/execute-sql! :materialize [& args]
   (apply execute/sequentially-execute-sql! args))
 
-;; (defmethod sql.tx/create-table-sql :materialize
-;;   [driver {:keys [database-name]} {:keys [table-name fields]}]
-;;   (let [table-name (ddl.i/format-name driver table-name)
-;;         fields (map (fn [{:keys [name type]}]
-;;                       (format "\"%s\" %s" (ddl.i/format-name driver name) (sql.tx/field-base-type->sql-type driver type)))
-;;                     fields)]
-;;     (format "CREATE TABLE \"%s\".\"%s\".\"%s\" (%s);"
-;;             (ddl.i/format-name driver database-name)
-;;             "public"
-;;             table-name
-;;             (str/join ", " fields))))
 (defmethod sql.tx/pk-sql-type :materialize [_] "INTEGER")
 
 (defmethod sql.tx/create-table-sql :materialize
