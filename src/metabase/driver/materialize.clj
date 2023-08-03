@@ -17,13 +17,17 @@
 ;;; +----------------------------------------------------------------------------------------------------------------+
 
 (doseq [[feature supported?] {:foreign-keys              false
+                              ;; Materialize defaults to UTC, and this is the only supported value
                               :set-timezone              false
                               :datetime-diff             false
                               :convert-timezone          false
                               :nested-queries            false
+                              ;; Disabling the expressions support due to the following error:
+                              ;; Error executing query: ERROR: function substring(text, character varying) does not exist
                               :expressions               false
                               :persist-models            false
                               :time-interval             false
+                              ;; Disable percentile aggregations due to missing support for PERCENTILE_CONT
                               :percentile-aggregations   false
                               :test/jvm-timezone-setting false}]
   (defmethod driver/database-supports? [:materialize feature] [_driver _feature _db] supported?))

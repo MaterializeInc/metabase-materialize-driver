@@ -8,7 +8,6 @@
    [metabase.driver.ddl.interface :as ddl.i]
    [metabase.test.data.interface :as tx]
    [metabase.test.data.sql :as sql.tx]
-   [metabase.driver.sql-jdbc.execute :as sql-jdbc.execute]
    [metabase.test.data.sql-jdbc.execute :as execute]
    [metabase.test.data.sql-jdbc.load-data :as load-data]
    [metabase.test.data.sql.ddl :as ddl]
@@ -40,6 +39,7 @@
                              :type/Float          "FLOAT"
                              :type/Integer        "INTEGER"
                              :type/Text           "TEXT"
+                             :type/JSON           "JSON"
                              :type/Time           "TIME"
                              :type/UUID           "UUID"}]
   (defmethod sql.tx/field-base-type->sql-type [:materialize base-type] [_ _] db-type))
@@ -109,9 +109,9 @@
   [_driver _base-type]
   false)
 
-(defmethod tx/supports-time-type? :materialize
-  [_driver]
-  false)
+;; (defmethod tx/supports-time-type? :materialize
+;;   [_driver]
+;;   false)
 
 (defmethod tx/supports-timestamptz-type? :materialize
   [_driver]
