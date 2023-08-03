@@ -15,8 +15,6 @@
 
 (set! *warn-on-reflection* true)
 
-;; (sql-jdbc.tx/add-test-extensions! :materialize)
-
 (defmethod driver/database-supports? [:materialize :foreign-keys] [_driver _feature _db] (not config/is-test?))
 
 (defmethod ddl/drop-db-ddl-statements :materialize
