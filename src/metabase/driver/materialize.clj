@@ -4,6 +4,7 @@
              [set :as set]]
             [metabase.db.spec :as db.spec]
             [metabase.driver :as driver]
+            [metabase.driver.sql-jdbc.execute :as sql-jdbc.execute]
             [metabase.driver.sql-jdbc
              [common :as sql-jdbc.common]
              [connection :as sql-jdbc.conn]
@@ -20,8 +21,13 @@
                               :datetime-diff             false
                               :convert-timezone          false
                               :nested-queries            false
+                              :expressions               false
                               :test/jvm-timezone-setting false}]
   (defmethod driver/database-supports? [:materialize feature] [_driver _feature _db] supported?))
+
+(defmethod sql-jdbc.execute/set-timezone-sql :materialize
+  [_]
+  "SET TIMEZONE TO %s;")
 
 ; ;;; +----------------------------------------------------------------------------------------------------------------+
 ; ;;; |                                         metabase.driver.sql-jdbc impls                                         |

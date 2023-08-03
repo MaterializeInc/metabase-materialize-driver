@@ -24,7 +24,7 @@
     (is (= true true))))
 
 (deftest expression-using-aggregation-test
-  (mt/test-drivers (mt/normal-drivers-with-feature :expressions)
+  (mt/test-drivers :materialize
                    (testing "Can we use aggregations from previous steps in expressions (#12762)"
                      (is (= [["25°" 2 2 0]
                              ["33 Taps" 2 2 0]
