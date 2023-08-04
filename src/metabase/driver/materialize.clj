@@ -14,12 +14,6 @@
 
 (driver/register! :materialize, :parent :postgres)
 
-;; (defmethod sql.qp/add-interval-honeysql-form :materialize
-;;   [_driver hsql-form amount unit]
-;;   ;; Convert weeks to days because Materialize doesn't support weeks and the rest should work as is
-;;   (let [unit (if (= unit :week) :day unit)]
-;;     (h2x// (sql.qp/add-interval-honeysql-form :postgres hsql-form amount unit))))
-
 (defmethod sql.qp/add-interval-honeysql-form :materialize
   [_driver hsql-form amount unit]
   ;; Convert weeks to days because Materialize doesn't support weeks and the rest should work as is
@@ -28,9 +22,9 @@
     (h2x// (sql.qp/add-interval-honeysql-form :postgres hsql-form adjusted-amount adjusted-unit))))
 
 
-(defmethod sql.qp/datetime-diff [:materialize :week]
-  [driver _unit x y]
-  (h2x// (sql.qp/datetime-diff driver :day x y) 7))
+;; (defmethod sql.qp/datetime-diff [:materialize :week]
+;;   [driver _unit x y]
+;;   (h2x// (sql.qp/datetime-diff driver :day x y) 7))
 
 ;;; +----------------------------------------------------------------------------------------------------------------+
 ;;; |                                          metabase.driver method impls                                          |

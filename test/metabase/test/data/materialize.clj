@@ -98,9 +98,9 @@
   [_driver _base-type]
   false)
 
-;; (defmethod tx/supports-time-type? :materialize
-;;   [_driver]
-;;   false)
+(defmethod tx/supports-time-type? :materialize
+  [_driver]
+  false)
 
 (defmethod tx/supports-timestamptz-type? :materialize
   [_driver]
