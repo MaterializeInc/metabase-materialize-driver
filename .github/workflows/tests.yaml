@@ -44,13 +44,13 @@ jobs:
 
       - name: Install Clojure CLI
         run: |
-          curl -O https://download.clojure.org/install/linux-install-1.11.1.1182.sh &&
-          sudo bash ./linux-install-1.11.1.1182.sh
+          curl -O https://download.clojure.org/install/linux-install-1.11.1.1262.sh &&
+          sudo bash ./linux-install-1.11.1.1262.sh
 
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: "18"
           cache: "yarn"
 
       - name: Get M2 cache
