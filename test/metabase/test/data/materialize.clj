@@ -16,6 +16,7 @@
 (set! *warn-on-reflection* true)
 
 (defmethod driver/database-supports? [:materialize :foreign-keys] [_driver _feature _db] (not config/is-test?))
+;; (defmethod driver/supports? [:materialize :foreign-keys] [_ _] (not config/is-test?))
 
 (defmethod ddl/drop-db-ddl-statements :materialize
   [& args]

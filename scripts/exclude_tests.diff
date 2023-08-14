@@ -11,3 +11,31 @@ index b26ac03b83..fd5c2abb99 100644
 
  (defn nest-query
    "Nest an MBQL/native query by `n-levels`. Useful for testing how nested queries behave."
+diff --git a/test/metabase/query_processor_test/explicit_joins_test.clj b/test/metabase/query_processor_test/explicit_joins_test.clj
+index 901376afb1..350b51c5ef 100644
+--- a/test/metabase/query_processor_test/explicit_joins_test.clj
++++ b/test/metabase/query_processor_test/explicit_joins_test.clj
+@@ -265,8 +265,8 @@
+
+ (deftest select-*-source-query-test
+   (mt/test-drivers (disj (mt/normal-drivers-with-feature :left-join)
+-                         ;; mongodb doesn't support foreign keys required by this test
+-                         :mongo)
++                         ;; mongodb and materialize don't support foreign keys required by this test
++                         :mongo :materialize)
+     (testing "We should be able to run a query that for whatever reason ends up with a `SELECT *` for the source query"
+       (let [{:keys [rows columns]} (mt/format-rows-by [int int]
+                                      (mt/rows+column-names
+diff --git a/test/metabase/query_processor_test/date_bucketing_test.clj b/test/metabase/query_processor_test/date_bucketing_test.clj
+index 87d225f5ae..737ed8c267 100644
+--- a/test/metabase/query_processor_test/date_bucketing_test.clj
++++ b/test/metabase/query_processor_test/date_bucketing_test.clj
+@@ -232,7 +232,7 @@
+                 ["2015-06-02 08:20:00" 1]
+                 ["2015-06-02 11:11:00" 1]]
+
+-               (and (qp.test/tz-shifted-driver-bug? driver/*driver*) (not= driver/*driver* :oracle))
++               (and (qp.test/tz-shifted-driver-bug? driver/*driver*) (not= driver/*driver* :oracle) (not= driver/*driver* :materialize))
+                [["2015-06-01T10:31:00-04:00" 1]
+                 ["2015-06-01T16:06:00-04:00" 1]
+                 ["2015-06-01T17:23:00-04:00" 1]
