@@ -34,7 +34,7 @@
                               ;; Materialize defaults to UTC, and this is the only supported value
                               :set-timezone              false
                               :datetime-diff             false
-                              ;; :temporal-extract          false
+                              :temporal-extract          (not config/is-test?)
                               :convert-timezone          false
                               :nested-queries            false
                               ;; Disabling the expressions support due to the following error:
