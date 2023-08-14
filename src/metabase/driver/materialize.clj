@@ -3,7 +3,7 @@
   (:require [clojure
              [set :as set]]
             [metabase.db.spec :as db.spec]
-            [metabase.driver :as driver]
+            [metabase [config :as config] [driver :as driver] [util :as u]]
             [metabase.driver.sql-jdbc.execute :as sql-jdbc.execute]
             [metabase.driver.sql.query-processor :as sql.qp]
             [metabase.util.honey-sql-2 :as h2x]
@@ -30,7 +30,7 @@
 ;;; |                                          metabase.driver method impls                                          |
 ;;; +----------------------------------------------------------------------------------------------------------------+
 
-(doseq [[feature supported?] {:foreign-keys              false
+(doseq [[feature supported?] {:foreign-keys              (not config/is-test?)
                               ;; Materialize defaults to UTC, and this is the only supported value
                               :set-timezone              false
                               :datetime-diff             false

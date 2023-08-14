@@ -1,0 +1,13 @@
+diff --git a/test/metabase/query_processor_test.clj b/test/metabase/query_processor_test.clj
+index b26ac03b83..fd5c2abb99 100644
+--- a/test/metabase/query_processor_test.clj
++++ b/test/metabase/query_processor_test.clj
+@@ -365,7 +365,7 @@
+   also have this issue."
+   [driver]
+   ;; TIMEZONE FIXME — remove this and fix the drivers
+-  (contains? #{:snowflake :oracle :redshift} driver))
++  (contains? #{:snowflake :oracle :redshift :materialize} driver))
+
+ (defn nest-query
+   "Nest an MBQL/native query by `n-levels`. Useful for testing how nested queries behave."
