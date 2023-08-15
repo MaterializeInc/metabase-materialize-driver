@@ -49,16 +49,15 @@ index 87d225f5ae..343eb1f5f5 100644
                  ["2015-06-01T16:06:00-04:00" 1]
                  ["2015-06-01T17:23:00-04:00" 1]
 diff --git a/test/metabase/query_processor/middleware/parameters/mbql_test.clj b/test/metabase/query_processor/middleware/parameters/mbql_test.clj
-index 840174295a..568580f684 100644
+index cebabc72dc..e1f77fdb9a 100644
 --- a/test/metabase/query_processor/middleware/parameters/mbql_test.clj
 +++ b/test/metabase/query_processor/middleware/parameters/mbql_test.clj
-@@ -289,7 +289,8 @@
+@@ -287,7 +287,7 @@
+
+ ;;
  (deftest handle-fk-forms-test
-   (mt/test-drivers (params-test-drivers)
-     (mt/with-everything-store
--      (when (driver/database-supports? driver/*driver* :foreign-keys (mt/db))
-+      (when (and (driver/database-supports? driver/*driver* :foreign-keys (mt/db))
-+            (not= driver/*driver* :materialize))
-         (testing "Make sure we properly handle paramters that have `fk->` forms in `:dimension` targets (#9017)"
-           (is (= [[31 "Bludso's BBQ" 5 33.8894 -118.207 2]
-                   [32 "Boneyard Bistro" 5 34.1477 -118.428 3]
+-  (mt/test-drivers (filter #(driver/supports? % :foreign-keys) (params-test-drivers))
++  (mt/test-drivers (filter #(driver/supports? % :foreign-keys) (params-test-drivers) (not= driver/*driver* :materialize))
+     (testing "Make sure we properly handle paramters that have `fk->` forms in `:dimension` targets (#9017)"
+       (is (= [[31 "Bludso's BBQ" 5 33.8894 -118.207 2]
+               [32 "Boneyard Bistro" 5 34.1477 -118.428 3]
