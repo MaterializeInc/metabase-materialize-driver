@@ -72,7 +72,7 @@ DRIVERS=materialize clojure -X:dev:drivers:drivers-dev:test:user/materialize
 
 you can see that we have our profiles `:user/materialize:user/test` added to the command above, and with `DRIVERS=materialize` we instruct Metabase to run the tests only for Materialize.
 
-> **Note**" Omitting `DRIVERS` will run the tests for all the built-in database drivers.
+> **Note** Omitting `DRIVERS` will run the tests for all the built-in database drivers.
 
 If you want to run tests for only a specific namespace:
 
