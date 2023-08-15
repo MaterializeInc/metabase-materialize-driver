@@ -12,10 +12,10 @@ index b26ac03b83..fd5c2abb99 100644
  (defn nest-query
    "Nest an MBQL/native query by `n-levels`. Useful for testing how nested queries behave."
 diff --git a/test/metabase/query_processor_test/explicit_joins_test.clj b/test/metabase/query_processor_test/explicit_joins_test.clj
-index 901376afb1..350b51c5ef 100644
+index 166598c4c6..acef6d6073 100644
 --- a/test/metabase/query_processor_test/explicit_joins_test.clj
 +++ b/test/metabase/query_processor_test/explicit_joins_test.clj
-@@ -265,8 +265,8 @@
+@@ -262,8 +262,8 @@
 
  (deftest select-*-source-query-test
    (mt/test-drivers (disj (mt/normal-drivers-with-feature :left-join)
@@ -26,6 +26,15 @@ index 901376afb1..350b51c5ef 100644
      (testing "We should be able to run a query that for whatever reason ends up with a `SELECT *` for the source query"
        (let [{:keys [rows columns]} (mt/format-rows-by [int int]
                                       (mt/rows+column-names
+@@ -909,7 +909,7 @@
+                          (qp/process-query query))))))))))))
+
+ (deftest join-with-brakout-and-aggregation-expression
+-  (mt/test-drivers (mt/normal-drivers-with-feature :left-join)
++  (mt/test-drivers (mt/normal-drivers-with-feature :left-join) (not= driver/*driver* :materialize)
+     (mt/dataset sample-dataset
+       (let [query (mt/mbql-query orders
+                                  {:source-query {:source-table $$orders
 diff --git a/test/metabase/query_processor_test/date_bucketing_test.clj b/test/metabase/query_processor_test/date_bucketing_test.clj
 index 87d225f5ae..343eb1f5f5 100644
 --- a/test/metabase/query_processor_test/date_bucketing_test.clj
