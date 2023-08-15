@@ -16,7 +16,6 @@
 (set! *warn-on-reflection* true)
 
 (defmethod driver/database-supports? [:materialize :foreign-keys] [_driver _feature _db] (not config/is-test?))
-;; (defmethod driver/supports? [:materialize :foreign-keys] [_ _] (not config/is-test?))
 
 (defmethod ddl/drop-db-ddl-statements :materialize
   [& args]
@@ -50,7 +49,8 @@
   (merge
    {:host     (tx/db-test-env-var-or-throw :materialize :host "localhost")
     :port     (tx/db-test-env-var-or-throw :materialize :port 6875)
-    :ssl      (tx/db-test-env-var :materialize :ssl false)}
+    :ssl      (tx/db-test-env-var :materialize :ssl false)
+    :cluster  (tx/db-test-env-var :materialize :cluster "default")}
    (when-let [user (tx/db-test-env-var :materialize :user)]
      {:user user})
    (when-let [password (tx/db-test-env-var :materialize :password)]
@@ -71,9 +71,6 @@
 (defmethod sql.tx/drop-db-if-exists-sql :materialize
   [driver {:keys [database-name]}]
   (format "DROP DATABASE IF EXISTS \"%s\";" (ddl.i/format-name driver database-name)))
-
-;; (defmethod sql.tx/create-db-sql         :materialize [_ _] nil)
-
 
 (defmethod sql.tx/add-fk-sql :materialize [& _] nil)
 

@@ -56,15 +56,15 @@
 ; ;;; +----------------------------------------------------------------------------------------------------------------+
 
 (defmethod sql-jdbc.conn/connection-details->spec :materialize
-  [_ {:keys [host port db], :as opts}]
+  [_ {:keys [host port db cluster], :as opts}]
   (sql-jdbc.common/handle-additional-options
    (merge
     {:classname                     "org.postgresql.Driver"
      :subprotocol                   "postgresql"
-     :subname                       (str "//" host ":" port "/" db)
+     :subname                       (str "//" host ":" port "/" db "?options=--cluster%3D" cluster)
      :ssl                           true
      :OpenSourceSubProtocolOverride false}
-    (dissoc opts :host :port :db))))
+    (dissoc opts :host :port :db :cluster))))
 
 (defmethod driver/describe-table :materialize
   [driver database table]

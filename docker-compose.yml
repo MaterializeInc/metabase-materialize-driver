@@ -25,3 +25,13 @@ services:
     command: sh -c 'echo "Waiting for materialized to start..." && sleep 15 && psql -h materialize -U mz_system -d materialize -p 6877 -c "ALTER SYSTEM SET max_tables = 1000;"'
     environment:
       - PGPASSWORD=materialize
+
+  metabase:
+    image: metabase/metabase:v0.46.7
+    container_name: metabase-with-materialize-driver
+    environment:
+      'MB_HTTP_TIMEOUT': '5000'
+    ports:
+      - '3000:3000'
+    volumes:
+      - '../../../resources/modules/materialize.metabase-driver.jar:/plugins/materialize.jar'
