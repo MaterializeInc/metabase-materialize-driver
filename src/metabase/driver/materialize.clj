@@ -58,7 +58,6 @@
     {:classname                     "org.postgresql.Driver"
      :subprotocol                   "postgresql"
      :subname                       (str "//" host ":" port "/" db "?options=--cluster%3D" cluster)
-     :ssl                           true
      :OpenSourceSubProtocolOverride false}
     (dissoc opts :host :port :db :cluster))))
 

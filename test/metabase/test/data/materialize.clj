@@ -49,7 +49,6 @@
   (merge
    {:host     (tx/db-test-env-var-or-throw :materialize :host "localhost")
     :port     (tx/db-test-env-var-or-throw :materialize :port 6875)
-    :ssl      (tx/db-test-env-var :materialize :ssl false)
     :cluster  (tx/db-test-env-var :materialize :cluster "default")}
    (when-let [user (tx/db-test-env-var :materialize :user)]
      {:user user})

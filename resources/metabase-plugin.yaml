@@ -16,21 +16,17 @@ driver:
     - merge:
         - port
         - default: 6875
-    - name: db
-      display-name: Database
-      placeholder: materialize
-      required: true
+    - merge:
+        - dbname
+        - name: db
+          placeholder: materialize
     - name: cluster
       display-name: Cluster
       placeholder: default
       required: true
       helper-text: Your Materialize cluster name.
-    - name: user
-      display-name: Username
-      placeholder: materialize
-      helper-text: Your Materialize user name.
+    - user
     - password
-    - ssl
 init:
   - step: load-namespace
     namespace: metabase.driver.materialize
