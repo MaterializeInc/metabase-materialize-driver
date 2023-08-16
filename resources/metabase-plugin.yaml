@@ -36,4 +36,3 @@ init:
     namespace: metabase.driver.materialize
   - step: register-jdbc-driver
     class: org.postgresql.Driver
-    # class: com.materialize.jdbc.MaterializeDriver
