@@ -18,7 +18,3 @@
 
 (use-fixtures :once (fixtures/initialize :plugins))
 (use-fixtures :once (fixtures/initialize :db))
-
-(deftest a-true-test
-  (testing "A test that should always pass"
-    (is (= true true))))

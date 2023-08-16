@@ -21,11 +21,6 @@
         adjusted-unit (if (= unit :week) :day unit)]
     (h2x// (sql.qp/add-interval-honeysql-form :postgres hsql-form adjusted-amount adjusted-unit))))
 
-
-;; (defmethod sql.qp/datetime-diff [:materialize :week]
-;;   [driver _unit x y]
-;;   (h2x// (sql.qp/datetime-diff driver :day x y) 7))
-
 ;;; +----------------------------------------------------------------------------------------------------------------+
 ;;; |                                          metabase.driver method impls                                          |
 ;;; +----------------------------------------------------------------------------------------------------------------+
@@ -34,14 +29,15 @@
                               ;; Materialize defaults to UTC, and this is the only supported value
                               :set-timezone              false
                               :datetime-diff             false
-                              :temporal-extract          (not config/is-test?)
                               :convert-timezone          false
-                              :nested-queries            false
+                              :temporal-extract          (not config/is-test?)
+                              ;; Disabling nested queries during tests as they try to use Foreign Keys
+                              :nested-queries            (not config/is-test?)
                               ;; Disabling the expressions support due to the following error:
                               ;; Error executing query: ERROR: function substring(text, character varying) does not exist
                               :expressions               false
+                              ;; Disabling model caching:
                               :persist-models            false
-                              :time-interval             false
                               ;; Disable percentile aggregations due to missing support for PERCENTILE_CONT
                               :percentile-aggregations   false
                               :test/jvm-timezone-setting false}]

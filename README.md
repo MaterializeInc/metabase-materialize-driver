@@ -26,6 +26,7 @@ connect:
 | Port              | 6875      |
 | Database username | default   |
 | Database password | default   |
+| Cluster name      | default   |
 
 [releases]: https://github.com/MaterializeInc/metabase-materialize-driver/releases
 [materialize/metabase]: https://hub.docker.com/repository/docker/materialize/metabase

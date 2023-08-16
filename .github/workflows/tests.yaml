@@ -83,14 +83,7 @@ jobs:
           ls -lah resources/modules
 
       - name: Archive driver JAR
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: materialize.metabase-driver.jar
           path: resources/modules/materialize.metabase-driver.jar
-
-      # - name: Report test results
-      #   uses: mikepenz/action-junit-report@v2.8.1
-      #   if: always()
-      #   with:
-      #     report_paths: "**/target/junit/*.xml"
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}

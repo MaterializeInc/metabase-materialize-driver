@@ -18,8 +18,6 @@ Please refer to the extensive documentation available on the Metabase website: [
 
 Materialize driver's code should be inside the main Metabase repository checkout in `modules/drivers/materialize` directory.
 
-Additionally, you need to tweak Metabase `deps.edn` a bit.
-
 The easiest way to set up a development environment is as follows (mostly the same as in the [CI](https://github.com/MaterializeInc/metabase-materialize-driver/blob/master/.github/workflows/tests.yml)):
 
 * Clone Metabase and Materialize driver repositories
