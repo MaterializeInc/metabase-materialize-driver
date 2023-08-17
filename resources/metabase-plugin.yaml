@@ -21,7 +21,7 @@ driver:
         - name: db
           placeholder: materialize
     - name: cluster
-      display-name: Cluster
+      display-name: Cluster name
       placeholder: default
       required: true
       helper-text: Your Materialize cluster name.
