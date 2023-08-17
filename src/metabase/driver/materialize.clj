@@ -3,7 +3,9 @@
   (:require [clojure
              [set :as set]]
             [metabase.db.spec :as db.spec]
-            [metabase [config :as config] [driver :as driver] [util :as u]]
+            [metabase.config :as config]
+            [metabase.driver :as driver]
+            [metabase.util :as u]
             [metabase.driver.sql-jdbc.execute :as sql-jdbc.execute]
             [metabase.driver.sql.query-processor :as sql.qp]
             [metabase.util.honey-sql-2 :as h2x]

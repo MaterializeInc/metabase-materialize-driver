@@ -15,8 +15,6 @@
 
 (set! *warn-on-reflection* true)
 
-(defmethod driver/database-supports? [:materialize :foreign-keys] [_driver _feature _db] (not config/is-test?))
-
 (defmethod ddl/drop-db-ddl-statements :materialize
   [& args]
   (apply (get-method ddl/drop-db-ddl-statements :sql-jdbc/test-extensions) args))
@@ -26,10 +24,8 @@
    ((get-method tx/aggregate-column-info ::tx/test-extensions) driver ag-type))
 
   ([driver ag-type field]
-   (merge
-    ((get-method tx/aggregate-column-info ::tx/test-extensions) driver ag-type field)
-    (when (= ag-type :sum)
-      {:base_type :type/BigInteger}))))
+   (cond-> ((get-method tx/aggregate-column-info ::tx/test-extensions) driver ag-type field)
+    (= ag-type :sum) (assoc :base_type :type/BigInteger))))
 
 (doseq [[base-type db-type] {:type/BigInteger     "BIGINT"
                              :type/Boolean        "BOOL"

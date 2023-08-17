@@ -9,7 +9,7 @@
 
 * Clojure 1.11+
 * OpenJDK 17
-* Node.js 18.x
+* Node.js 16.x
 * Yarn
 
 For testing: Docker Compose
@@ -28,11 +28,10 @@ checkout v0.46.7
 git clone https://github.com/MaterializeInc/metabase-materialize-driver.git modules/drivers/materialize
 ```
 
-* Create custom Clojure profiles
+* Create custom Clojure profiles, you can get it using the following command:
 
 ```bash
-mkdir -p ~/.clojure
-cat modules/drivers/materialize/.github/deps.edn | sed -e "s|PWD|$PWD|g" > ~/.clojure/deps.edn
+cat modules/drivers/materialize/.github/deps.edn | sed -e "s|PWD|$PWD|g" | tr -d '\n'
 ```
 
 Modifying `~/.clojure/deps.edn` will create two useful profiles: `user/materialize` that adds driver's sources to the classpath, and `user/test` that includes all the Metabase tests that are guaranteed to work with the driver.
@@ -66,7 +65,8 @@ docker compose -f modules/drivers/materialize/docker-compose.yml up -d materiali
 Now, you should be able to run the tests:
 
 ```bash
-DRIVERS=materialize clojure -X:dev:drivers:drivers-dev:test:user/materialize
+mz_deps=$(cat modules/drivers/materialize/.github/deps.edn | sed -e "s|PWD|$PWD|g" | tr -d '\n')
+DRIVERS=materialize clojure -Sdeps ${mz_deps} -X:dev:drivers:drivers-dev:test:user/materialize
 ```
 
 you can see that we have our profiles `:user/materialize:user/test` added to the command above, and with `DRIVERS=materialize` we instruct Metabase to run the tests only for Materialize.
@@ -76,7 +76,8 @@ you can see that we have our profiles `:user/materialize:user/test` added to the
 If you want to run tests for only a specific test:
 
 ```bash
-DRIVERS=materialize clojure -X:dev:drivers:drivers-dev:test:user/materialize :only metabase.query-processor.middleware.parameters.mbql-test
+mz_deps=$(cat modules/drivers/materialize/.github/deps.edn | sed -e "s|PWD|$PWD|g" | tr -d '\n')
+DRIVERS=materialize clojure -Sdeps ${mz_deps} -X:dev:drivers:drivers-dev:test:user/materialize :only metabase.query-processor.middleware.parameters.mbql-test
 ```
 
 ## Building a jar
