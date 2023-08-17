@@ -53,15 +53,23 @@
 ; ;;; |                                         metabase.driver.sql-jdbc impls                                         |
 ; ;;; +----------------------------------------------------------------------------------------------------------------+
 
+(def ^:private default-materialize-connection-details
+  {:host "materialize", :port 6875, :db "materialize", :cluster "default"})
+
 (defmethod sql-jdbc.conn/connection-details->spec :materialize
-  [_ {:keys [host port db cluster], :as opts}]
-  (sql-jdbc.common/handle-additional-options
-   (merge
-    {:classname                     "org.postgresql.Driver"
-     :subprotocol                   "postgresql"
-     :subname                       (str "//" host ":" port "/" db "?options=--cluster%3D" cluster)
-     :OpenSourceSubProtocolOverride false}
-    (dissoc opts :host :port :db :cluster))))
+  [_ details]
+  (let [details (reduce-kv (fn [m k v] (assoc m k (or v (k default-materialize-connection-details))))
+                           default-materialize-connection-details
+                           details)
+        {:keys [host port db cluster], :as opts} details]
+    (sql-jdbc.common/handle-additional-options
+     (merge
+      {:classname                     "org.postgresql.Driver"
+       :subprotocol                   "postgresql"
+       :subname                       (str "//" host ":" port "/" db "?options=--cluster%3D" cluster)
+       :OpenSourceSubProtocolOverride false}
+      (dissoc opts :host :port :db :cluster)))))
+
 
 (defmethod driver/describe-table :materialize
   [driver database table]
