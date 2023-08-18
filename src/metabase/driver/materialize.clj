@@ -58,10 +58,8 @@
 
 (defmethod sql-jdbc.conn/connection-details->spec :materialize
   [_ details]
-  (let [details (reduce-kv (fn [m k v] (assoc m k (or v (k default-materialize-connection-details))))
-                           default-materialize-connection-details
-                           details)
-        {:keys [host port db cluster], :as opts} details]
+  (let [{:keys [host port db cluster], :as opts}
+        (merge default-materialize-connection-details details)]
     (sql-jdbc.common/handle-additional-options
      (merge
       {:classname                     "org.postgresql.Driver"
