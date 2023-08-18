@@ -56,18 +56,25 @@
 (def ^:private default-materialize-connection-details
   {:host "materialize", :port 6875, :db "materialize", :cluster "default"})
 
+(defn- validate-connection-details
+  [{:keys [host port]}]
+  (when-not (re-matches #"^[a-zA-Z0-9.-]+$" host)
+    (throw (IllegalArgumentException. (str "Invalid host: " host))))
+  (when-not (integer? port)
+    (throw (IllegalArgumentException. (str "Invalid port: " port)))))
+
 (defmethod sql-jdbc.conn/connection-details->spec :materialize
   [_ details]
-  (let [{:keys [host port db cluster], :as opts}
-        (merge default-materialize-connection-details details)]
-    (sql-jdbc.common/handle-additional-options
-     (merge
-      {:classname                     "org.postgresql.Driver"
-       :subprotocol                   "postgresql"
-       :subname                       (str "//" host ":" port "/" db "?options=--cluster%3D" cluster)
-       :OpenSourceSubProtocolOverride false}
-      (dissoc opts :host :port :db :cluster)))))
-
+  (let [merged-details (merge default-materialize-connection-details details)]
+    (validate-connection-details merged-details)
+    (let [{:keys [host port db cluster], :as opts} merged-details]
+      (sql-jdbc.common/handle-additional-options
+       (merge
+        {:classname                     "org.postgresql.Driver"
+         :subprotocol                   "postgresql"
+         :subname                       (str "//" host ":" port "/" db "?options=--cluster%3D" cluster)
+         :OpenSourceSubProtocolOverride false}
+        (dissoc opts :host :port :db :cluster))))))
 
 (defmethod driver/describe-table :materialize
   [driver database table]
