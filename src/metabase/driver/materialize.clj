@@ -57,11 +57,9 @@
   {:host "materialize", :port 6875, :db "materialize", :cluster "default"})
 
 (defn- validate-connection-details
-  [{:keys [host port]}]
+  [{:keys [host]}]
   (when-not (re-matches #"^[a-zA-Z0-9.-]+$" host)
-    (throw (IllegalArgumentException. (str "Invalid host: " host))))
-  (when-not (integer? port)
-    (throw (IllegalArgumentException. (str "Invalid port: " port)))))
+    (throw (IllegalArgumentException. (str "Invalid host: " host)))))
 
 (defmethod sql-jdbc.conn/connection-details->spec :materialize
   [_ details]
