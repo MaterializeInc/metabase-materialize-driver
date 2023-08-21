@@ -16,17 +16,19 @@ driver:
     - merge:
         - port
         - default: 6875
-    - name: dbname
-      display-name: Database
-      placeholder: materialize
-    - name: user
-      display-name: Username
-      placeholder: materialize
-      helper-text: Your Materialize user name.
+    - merge:
+        - dbname
+        - name: db
+          placeholder: materialize
+    - name: cluster
+      display-name: Cluster name
+      placeholder: default
+      required: true
+      helper-text: Your Materialize cluster name.
+    - user
     - password
-    - ssl
 init:
   - step: load-namespace
     namespace: metabase.driver.materialize
   - step: register-jdbc-driver
-    class: com.materialize.jdbc.MaterializeDriver
+    class: org.postgresql.Driver

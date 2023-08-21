@@ -1,3 +1,5 @@
 /target
 .clj-kondo/
 .lsp/
+.cpcache/
+.build

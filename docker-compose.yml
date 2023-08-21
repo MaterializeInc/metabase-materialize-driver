@@ -1,0 +1,37 @@
+---
+version: "3.9"
+
+services:
+  materialize:
+    image: materialize/materialized:latest
+    container_name: materialize
+    command:
+      - --availability-zone=test1
+      - --availability-zone=test2
+    ports:
+      - 6875:6875
+      - 6877:6877
+      - 6878:6878
+    healthcheck:
+      {
+        test: curl -f localhost:6878/api/readyz,
+        interval: 1s,
+        start_period: 35s,
+      }
+  init:
+    image: postgres:15.3-alpine3.18
+    depends_on:
+      - materialize
+    command: sh -c 'echo "Waiting for materialized to start..." && sleep 15 && psql -h materialize -U mz_system -d materialize -p 6877 -c "ALTER SYSTEM SET max_tables = 1000;"'
+    environment:
+      - PGPASSWORD=materialize
+
+  metabase:
+    image: metabase/metabase:v0.46.7
+    container_name: metabase-with-materialize-driver
+    environment:
+      'MB_HTTP_TIMEOUT': '5000'
+    ports:
+      - '3000:3000'
+    volumes:
+      - '../../../resources/modules/materialize.metabase-driver.jar:/plugins/materialize.jar'
