@@ -31,6 +31,12 @@ connect:
 [releases]: https://github.com/MaterializeInc/metabase-materialize-driver/releases
 [materialize/metabase]: https://hub.docker.com/repository/docker/materialize/metabase
 
+## Choosing the Right Version
+
+Metabase Release | Driver Version
+---------------- | --------------
+v0.46.7          | v0.1.0
+
 ## Contributing
 
 Check out our [contributing guide](CONTRIBUTING.md) for more information on how
