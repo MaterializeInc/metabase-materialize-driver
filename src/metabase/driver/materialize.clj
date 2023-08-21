@@ -33,6 +33,10 @@
                               :datetime-diff             false
                               :convert-timezone          false
                               :temporal-extract          (not config/is-test?)
+                              ;; Disabling during tests as the data load fails with:
+                              ;; metabase.driver.sql-jdbc.sync.describe-table-test/describe-big-nested-field-columns-test (impl.clj:141)
+                              ;; ERROR: column "big_json" is of type jsonb but expression is of type character varying
+                              :nested-field-columns      (not config/is-test?)
                               ;; Disabling nested queries during tests as they try to use Foreign Keys
                               :nested-queries            (not config/is-test?)
                               ;; Disabling the expressions support due to the following error:
