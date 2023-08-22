@@ -1,16 +1,3 @@
-diff --git a/test/metabase/query_processor_test.clj b/test/metabase/query_processor_test.clj
-index b26ac03b83..fd5c2abb99 100644
---- a/test/metabase/query_processor_test.clj
-+++ b/test/metabase/query_processor_test.clj
-@@ -365,7 +365,7 @@
-   also have this issue."
-   [driver]
-   ;; TIMEZONE FIXME — remove this and fix the drivers
--  (contains? #{:snowflake :oracle :redshift} driver))
-+  (contains? #{:snowflake :oracle :redshift :materialize} driver))
-
- (defn nest-query
-   "Nest an MBQL/native query by `n-levels`. Useful for testing how nested queries behave."
 diff --git a/test/metabase/query_processor_test/explicit_joins_test.clj b/test/metabase/query_processor_test/explicit_joins_test.clj
 index 166598c4c6..e1bef679f1 100644
 --- a/test/metabase/query_processor_test/explicit_joins_test.clj
@@ -62,24 +49,3 @@ index 87d225f5ae..343eb1f5f5 100644
                 [["2015-06-01T10:31:00-04:00" 1]
                  ["2015-06-01T16:06:00-04:00" 1]
                  ["2015-06-01T17:23:00-04:00" 1]
-diff --git a/test/metabase/query_processor/middleware/parameters/mbql_test.clj b/test/metabase/query_processor/middleware/parameters/mbql_test.clj
-index cebabc72dc..e148dd5b3f 100644
---- a/test/metabase/query_processor/middleware/parameters/mbql_test.clj
-+++ b/test/metabase/query_processor/middleware/parameters/mbql_test.clj
-@@ -288,6 +288,7 @@
- ;;
- (deftest handle-fk-forms-test
-   (mt/test-drivers (filter #(driver/supports? % :foreign-keys) (params-test-drivers))
-+    (when (not= driver/*driver* :materialize)
-     (testing "Make sure we properly handle paramters that have `fk->` forms in `:dimension` targets (#9017)"
-       (is (= [[31 "Bludso's BBQ" 5 33.8894 -118.207 2]
-               [32 "Boneyard Bistro" 5 34.1477 -118.428 3]
-@@ -317,7 +318,7 @@
-                   {:query      {:order-by [[:asc $id]]}
-                    :parameters [{:type   :string/starts-with
-                                  :target [:dimension $category_id->categories.name]
--                                 :value  ["BB"]}]}))))))))
-+                                 :value  ["BB"]}]})))))))))
-
- (deftest test-mbql-parameters
-   (testing "Should be able to pass parameters in to an MBQL query"

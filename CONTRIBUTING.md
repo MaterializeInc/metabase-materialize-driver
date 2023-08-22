@@ -9,7 +9,7 @@
 
 * Clojure 1.11+
 * OpenJDK 17
-* Node.js 16.x
+* Node.js 18.x
 * Yarn
 
 For testing: Docker Compose
@@ -24,7 +24,7 @@ The easiest way to set up a development environment is as follows (mostly the sa
 ```bash
 git clone https://github.com/metabase/metabase.git
 cd metabase
-checkout v0.46.7
+checkout v0.47.0
 git clone https://github.com/MaterializeInc/metabase-materialize-driver.git modules/drivers/materialize
 ```
 

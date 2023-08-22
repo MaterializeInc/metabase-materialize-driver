@@ -86,7 +86,6 @@
 (defmethod load-data/load-data! :materialize [& args]
   (apply load-data/load-data-add-ids-chunked! args))
 
-
 (defmethod tx/sorts-nil-first? :materialize
   [_driver _base-type]
   false)
