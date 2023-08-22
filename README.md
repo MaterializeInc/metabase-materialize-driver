@@ -36,6 +36,7 @@ connect:
 Metabase Release | Driver Version
 ---------------- | --------------
 v0.46.7          | v0.1.0
+v0.47.0          | v0.1.1
 
 ## Contributing
 
