@@ -4,7 +4,7 @@ The `metabase-materialize-driver` lets
 [Metabase](https://github.com/metabase/metabase) connect to an instance of
 [Materialize](https://github.com/MaterializeInc/materialize).
 
-![Choose Materialize from database dropdown](images/materialize-metabase.png)
+![Choose Materialize from database dropdown](https://github-production-user-asset-6210df.s3.amazonaws.com/21223421/262440951-6439ee5f-2aad-4742-ad54-e7548323f7b7.png)
 
 ## To Use the Driver
 
@@ -20,13 +20,15 @@ following sections.)
 Once the Materialize driver is registered, use the following information to
 connect:
 
-| Field             | Value     |
-| ----------------- |:---------:|
-| Host              | localhost |
-| Port              | 6875      |
-| Database username | default   |
-| Database password | default   |
-| Cluster name      | default   |
+| Field             | Value                  |
+| ----------------- |:----------------------:|
+| Database type     | **Materialize**        |
+| Host              | Materialize host name. |
+| Port              | **6875**               |
+| Database name     | **materialize**        |
+| Cluster name      | **default**            |
+| Database username | Materialize user.      |
+| Database password | App-specific password. |
 
 [releases]: https://github.com/MaterializeInc/metabase-materialize-driver/releases
 [materialize/metabase]: https://hub.docker.com/repository/docker/materialize/metabase
@@ -36,7 +38,7 @@ connect:
 Metabase Release | Driver Version
 ---------------- | --------------
 v0.46.7          | v0.1.0
-v0.47.0          | v0.1.1
+v0.47.0          | v1.0.0
 
 ## Contributing
 

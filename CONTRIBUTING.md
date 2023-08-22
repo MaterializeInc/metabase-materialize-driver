@@ -112,3 +112,14 @@ docker compose -f modules/drivers/materialize/docker-compose.yml up -d metabase
 ```
 
 It should pick up the driver jar as a volume.
+
+## Cutting a release
+
+Once the driver is ready to be released and tests are passing, you need to create a tag in the Metabase repository:
+
+```bash
+git tag -a vX.Y.Z -m vX.Y.Z
+git push origin vX.Y.Z
+```
+
+Once the tag is pushed, the CI will build the driver and create a release including the jar file. You can manually edit the release description to include any additional release notes.
