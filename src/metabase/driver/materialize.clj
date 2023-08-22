@@ -46,6 +46,8 @@
                               :persist-models            false
                               ;; Disable percentile aggregations due to missing support for PERCENTILE_CONT
                               :percentile-aggregations   false
+                              ;; Disabling the support for the `:connection-impersonation` feature as it's not supported
+                              :connection-impersonation  false
                               :test/jvm-timezone-setting false}]
   (defmethod driver/database-supports? [:materialize feature] [_driver _feature _db] supported?))
 
