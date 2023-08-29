@@ -27,7 +27,7 @@ services:
       - PGPASSWORD=materialize
 
   metabase:
-    image: metabase/metabase:v0.46.7
+    image: metabase/metabase:v0.47.0
     container_name: metabase-with-materialize-driver
     environment:
       'MB_HTTP_TIMEOUT': '5000'
