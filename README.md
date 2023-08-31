@@ -1,5 +1,7 @@
 # Materialize driver for Metabase
 
+[![Slack Badge](https://img.shields.io/badge/Join%20us%20on%20Slack!-blueviolet?style=flat&logo=slack&link=https://materialize.com/s/chat)](https://materialize.com/s/chat)
+
 The `metabase-materialize-driver` lets
 [Metabase](https://github.com/metabase/metabase) connect to an instance of
 [Materialize](https://github.com/MaterializeInc/materialize).
