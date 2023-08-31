@@ -10,7 +10,7 @@ The `metabase-materialize-driver` lets
 
 ## To Use the Driver
 
-We provide a pre-built docker image of metabase including this driver as
+We provide a pre-built docker image of Metabase including this driver as
 [materialize/metabase][]
 
 To use the `metabase-materialize-driver` with an existing Metabase
@@ -23,7 +23,7 @@ Once the Materialize driver is registered, use the following information to
 connect:
 
 | Field             | Value                  |
-| ----------------- |:----------------------:|
+| ----------------- | ---------------------- |
 | Database type     | **Materialize**        |
 | Host              | Materialize host name. |
 | Port              | **6875**               |
