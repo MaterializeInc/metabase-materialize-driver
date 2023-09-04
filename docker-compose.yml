@@ -22,7 +22,15 @@ services:
     image: postgres:15.3-alpine3.18
     depends_on:
       - materialize
-    command: sh -c 'echo "Waiting for materialized to start..." && sleep 15 && psql -h materialize -U mz_system -d materialize -p 6877 -c "ALTER SYSTEM SET max_tables = 1000;"'
+    command: >-
+      sh -c '
+      echo "Waiting for materialized to start..." &&
+      sleep 15 &&
+      echo "Set Materialize max_tables to 1000" &&
+      psql -h materialize -U mz_system -d materialize -p 6877 -c "ALTER SYSTEM SET max_tables = 1000;" &&
+      psql -h materialize -U materialize -d materialize -p 6875 -c "SHOW max_tables;" &&
+      echo "Grant CREATEDB to materialize user" &&
+      psql -h materialize -U mz_system -d materialize -p 6877 -c "GRANT CREATEDB ON SYSTEM TO materialize;"'
     environment:
       - PGPASSWORD=materialize
 
