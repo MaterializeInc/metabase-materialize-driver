@@ -8,6 +8,7 @@ services:
     command:
       - --availability-zone=test1
       - --availability-zone=test2
+      - --bootstrap-role=materialize
     ports:
       - 6875:6875
       - 6877:6877
@@ -28,9 +29,8 @@ services:
       sleep 15 &&
       echo "Set Materialize max_tables to 1000" &&
       psql -h materialize -U mz_system -d materialize -p 6877 -c "ALTER SYSTEM SET max_tables = 1000;" &&
-      psql -h materialize -U materialize -d materialize -p 6875 -c "SHOW max_tables;" &&
-      echo "Grant CREATEDB to materialize user" &&
-      psql -h materialize -U mz_system -d materialize -p 6877 -c "GRANT CREATEDB ON SYSTEM TO materialize;"'
+      psql -h materialize -U materialize -d materialize -p 6875 -c "SHOW max_tables;"
+      '
     environment:
       - PGPASSWORD=materialize
 
