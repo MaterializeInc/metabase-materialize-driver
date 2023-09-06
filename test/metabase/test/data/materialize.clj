@@ -44,10 +44,9 @@
   [_ context {:keys [database-name]}]
   (merge
    {:host     (tx/db-test-env-var-or-throw :materialize :host "localhost")
-    :port     (tx/db-test-env-var-or-throw :materialize :port 6875)
-    :cluster  (tx/db-test-env-var :materialize :cluster "default")}
-   (when-let [user (tx/db-test-env-var :materialize :user)]
-     {:user user})
+    :port     (tx/db-test-env-var-or-throw :materialize :port 6877)
+    :cluster  (tx/db-test-env-var :materialize :cluster "default")
+    :user     (tx/db-test-env-var-or-throw :materialize :user "mz_system")}
    (when-let [password (tx/db-test-env-var :materialize :password)]
      {:password password})
    (when (= context :db)
