@@ -1,7 +1,7 @@
 # Reference: https://github.com/metabase/metabase/wiki/Metabase-Plugin-Manifest-Reference
 info:
   name: Metabase Materialize Driver
-  version: 1.0.0
+  version: 1.0.1
   description: Allows Metabase to connect to Materialize.
 driver:
   name: materialize
