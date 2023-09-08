@@ -60,7 +60,7 @@ jobs:
           echo "{:deps {metabase/materialize {:local/root \"materialize\" }}}" > modules/drivers/deps.edn
           bin/build-driver.sh materialize
           mkdir -p modules/drivers/materialize/.build
-          cp resources/modules/materialize.metabase-driver.jar modules/drivers/materialize/.build/
+          cp resources/modules/materialize.metabase-driver.jar modules/drivers/materialize/.build/materialize-driver.jar
 
       - name: Use QEMU for multi-platform images
         uses: docker/setup-qemu-action@v2
