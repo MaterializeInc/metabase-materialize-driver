@@ -10,8 +10,12 @@ The `metabase-materialize-driver` lets
 
 ## To Use the Driver
 
-We provide a pre-built docker image of Metabase including this driver as
-[materialize/metabase][]
+We provide a pre-built Docker image of Metabase including this driver as
+[materialize/metabase][] on Docker Hub. To use it, run:
+
+```bash
+docker run -p 3000:3000 materialize/metabase
+```
 
 To use the `metabase-materialize-driver` with an existing Metabase
 installation, copy a `.jar` file from one of our [releases][] into the
