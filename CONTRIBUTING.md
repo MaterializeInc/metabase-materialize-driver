@@ -103,7 +103,7 @@ Now, you should be able to build the final jar:
 bin/build-driver.sh materialize
 ```
 
-As the result, `resources/modules/materialize.metabase-driver.jar` should be created.
+As the result, `resources/modules/materialize.metabase-driver.jar` should be created. You can copy it to the Metabase `plugins` directory and start Metabase.
 
 For smoke testing, there is a Metabase with the link to the driver available as a Docker container:
 
