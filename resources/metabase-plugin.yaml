@@ -3,6 +3,9 @@ info:
   name: Metabase Materialize Driver
   version: 1.0.1
   description: Allows Metabase to connect to Materialize.
+contact-info:
+  name: Materialize Inc.
+  email: devex@materialize.com
 driver:
   name: materialize
   display-name: Materialize
