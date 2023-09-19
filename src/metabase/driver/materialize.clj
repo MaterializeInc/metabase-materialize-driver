@@ -31,7 +31,7 @@
                               ;; Materialize defaults to UTC, and this is the only supported value
                               :set-timezone              false
                               :datetime-diff             false
-                              :convert-timezone          false
+                              :convert-timezone          (not config/is-test?)
                               :temporal-extract          (not config/is-test?)
                               ;; Disabling during tests as the data load fails with:
                               ;; metabase.driver.sql-jdbc.sync.describe-table-test/describe-big-nested-field-columns-test (impl.clj:141)
