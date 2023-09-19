@@ -71,14 +71,15 @@
   [_ details]
   (let [merged-details (merge default-materialize-connection-details details)]
     (validate-connection-details merged-details)
-    (let [{:keys [host port db cluster], :as opts} merged-details]
+    (let [{:keys [host port db cluster ssl], :as opts} merged-details]
       (sql-jdbc.common/handle-additional-options
        (merge
         {:classname                     "org.postgresql.Driver"
          :subprotocol                   "postgresql"
          :subname                       (str "//" host ":" port "/" db "?options=--cluster%3D" cluster)
+         :sslmode                       (if ssl "require" "disable")
          :OpenSourceSubProtocolOverride false}
-        (dissoc opts :host :port :db :cluster))))))
+        (dissoc opts :host :port :db :cluster :ssl))))))
 
 (defmethod driver/describe-table :materialize
   [driver database table]
