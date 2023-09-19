@@ -36,7 +36,7 @@ following sections.)
 ### Connecting to Materialize
 
 Select Materialize from the database dropdown when adding a new database.
-Next use the following information to connect:
+Next, use the following information to connect:
 
 | Field             | Value                  |
 | ----------------- | ---------------------- |
