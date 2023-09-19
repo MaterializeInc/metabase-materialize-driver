@@ -6,7 +6,7 @@ The `metabase-materialize-driver` lets
 [Metabase](https://github.com/metabase/metabase) connect to an instance of
 [Materialize](https://github.com/MaterializeInc/materialize).
 
-![Choose Materialize from database dropdown](https://github-production-user-asset-6210df.s3.amazonaws.com/21223421/262440951-6439ee5f-2aad-4742-ad54-e7548323f7b7.png)
+![Choose Materialize from database dropdown](https://github-production-user-asset-6210df.s3.amazonaws.com/21223421/268976090-6ed5b4b0-abb0-48dc-862f-b2284cb878d7.png)
 
 ## To Use the Driver
 
@@ -35,6 +35,7 @@ connect:
 | Cluster name      | **default**            |
 | Database username | Materialize user.      |
 | Database password | App-specific password. |
+| SSL               | **Enabled**            |
 
 [releases]: https://github.com/MaterializeInc/metabase-materialize-driver/releases
 [materialize/metabase]: https://hub.docker.com/repository/docker/materialize/metabase
@@ -46,6 +47,7 @@ Metabase Release | Driver Version
 v0.46.7          | v0.1.0
 v0.47.0          | v1.0.0
 v0.47.1          | v1.0.1
+v0.47.1          | v1.0.2
 
 ## Contributing
 
