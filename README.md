@@ -10,6 +10,14 @@ The `metabase-materialize-driver` lets
 
 ## To Use the Driver
 
+### With Metabase Cloud
+
+As a Metabase partner driver, the Materialize driver is
+included in [Metabase Cloud](https://www.metabase.com/docs/latest/cloud/start) offering.
+To use it, simply select Materialize from the database dropdown when adding a new database.
+
+### With Docker
+
 We provide a pre-built Docker image of Metabase including this driver as
 [materialize/metabase][] on Docker Hub. To use it, run:
 
@@ -17,14 +25,18 @@ We provide a pre-built Docker image of Metabase including this driver as
 docker run -p 3000:3000 materialize/metabase
 ```
 
+### With self-hosted Metabase
+
 To use the `metabase-materialize-driver` with an existing Metabase
 installation, copy a `.jar` file from one of our [releases][] into the
 `/plugins` directory of your Metabase instance. Metabase will register the
 driver automatically! (For deployment-specific details, please consult the
 following sections.)
 
-Once the Materialize driver is registered, use the following information to
-connect:
+### Connecting to Materialize
+
+Select Materialize from the database dropdown when adding a new database.
+Next use the following information to connect:
 
 | Field             | Value                  |
 | ----------------- | ---------------------- |
