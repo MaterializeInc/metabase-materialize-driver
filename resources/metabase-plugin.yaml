@@ -30,6 +30,9 @@ driver:
       helper-text: Your Materialize cluster name.
     - user
     - password
+    - name: schema-filters
+      type: schema-filters
+      display-name: Schemas
 init:
   - step: load-namespace
     namespace: metabase.driver.materialize
