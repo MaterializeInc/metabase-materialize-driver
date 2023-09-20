@@ -44,6 +44,7 @@
   [_ context {:keys [database-name]}]
   (merge
    {:host     (tx/db-test-env-var-or-throw :materialize :host "localhost")
+    :ssl      (tx/db-test-env-var :materialize :ssl false)
     :port     (tx/db-test-env-var-or-throw :materialize :port 6877)
     :cluster  (tx/db-test-env-var :materialize :cluster "default")
     :user     (tx/db-test-env-var-or-throw :materialize :user "mz_system")}

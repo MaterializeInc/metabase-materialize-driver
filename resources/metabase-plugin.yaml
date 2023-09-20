@@ -30,7 +30,9 @@ driver:
       helper-text: Your Materialize cluster name.
     - user
     - password
-    - ssl
+    - merge:
+        - ssl
+        - default: true
     - name: schema-filters
       type: schema-filters
       display-name: Schemas
