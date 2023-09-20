@@ -58,8 +58,7 @@ Metabase Release | Driver Version
 ---------------- | --------------
 v0.46.7          | v0.1.0
 v0.47.0          | v1.0.0
-v0.47.1          | v1.0.1
-v0.47.1          | v1.0.2
+v0.47.1          | v1.0.1 <br> v1.0.2 <br> v1.0.3
 
 ## Contributing
 
