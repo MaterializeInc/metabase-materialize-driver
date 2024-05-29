@@ -1,7 +1,7 @@
 # Reference: https://github.com/metabase/metabase/wiki/Metabase-Plugin-Manifest-Reference
 info:
   name: Metabase Materialize Driver
-  version: 1.0.3
+  version: 1.1.0
   description: Allows Metabase to connect to Materialize.
 contact-info:
   name: Materialize Inc.
@@ -25,7 +25,7 @@ driver:
           placeholder: materialize
     - name: cluster
       display-name: Cluster name
-      placeholder: default
+      placeholder: quickstart
       required: true
       helper-text: Your Materialize cluster name.
     - user
@@ -36,6 +36,8 @@ driver:
     - name: schema-filters
       type: schema-filters
       display-name: Schemas
+    - advanced-options-start
+    - default-advanced-options
 init:
   - step: load-namespace
     namespace: metabase.driver.materialize
