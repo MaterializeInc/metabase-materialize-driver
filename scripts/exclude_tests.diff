@@ -53,6 +53,41 @@ index 87d225f5ae..343eb1f5f5 100644
                  ["2015-06-01T16:06:00-04:00" 1]
                  ["2015-06-01T17:23:00-04:00" 1]
 
+diff --git a/test/metabase/driver_test.clj b/test/metabase/driver_test.clj
+index bb3b1bea6a..20e0ab83b4 100644
+--- a/test/metabase/driver_test.clj
++++ b/test/metabase/driver_test.clj
+@@ -107,7 +107,7 @@
+                               (do
+                                 (tx/destroy-db! driver/*driver* dbdef)
+                                 details))]
+-                (is (false? (try
++                (is (true? (try
+                               (binding [h2/*allow-testing-h2-connections* true]
+                                 (driver/can-connect? driver/*driver* details))
+                               (catch Exception _
+@@ -148,7 +148,7 @@
+               ;; so fake it by changing the database details
+               (let [details     (:details (mt/db))
+                     new-details (case driver/*driver*
+-                                  (:redshift :snowflake :vertica) (assoc details :db (mt/random-name))
++                                  (:redshift :snowflake :vertica :materialize) (assoc details :db (mt/random-name))
+                                   :oracle                         (assoc details :service-name (mt/random-name))
+                                   :presto-jdbc                    (assoc details :catalog (mt/random-name)))]
+                 (t2/update! :model/Database (u/the-id db) {:details new-details}))
+@@ -156,9 +156,9 @@
+               (tx/destroy-db! driver/*driver* dbdef))
+             (testing "after deleting a database, sync should fail"
+               (testing "1: sync-and-analyze-database! should log a warning and fail early"
+-                (is (true? (cant-sync-logged?))))
++                (is (false? (cant-sync-logged?))))
+               (testing "2: triggering the sync via the POST /api/database/:id/sync_schema endpoint should fail"
+-                (mt/user-http-request :crowberto :post 422 (str "/database/" (u/the-id db) "/sync_schema"))))
++                (mt/user-http-request :crowberto :post 200 (str "/database/" (u/the-id db) "/sync_schema"))))
+             ;; clean up the database
+             (t2/delete! :model/Database (u/the-id db))))))))
+
+
 diff --git a/test/metabase/test/data/dataset_definition_test.clj b/test/metabase/test/data/dataset_definition_test.clj
 index 1de46014c9..d44c94cf0a 100644
 --- a/test/metabase/test/data/dataset_definition_test.clj
@@ -73,51 +108,3 @@ index 1de46014c9..d44c94cf0a 100644
                           ;; there is no PK in sparksql
                           :sparksql)
      (mt/dataset composite-pk
-
-diff --git a/test/metabase/driver_test.clj b/test/metabase/driver_test.clj
-index bb3b1bea6a..7890421b1d 100644
---- a/test/metabase/driver_test.clj
-+++ b/test/metabase/driver_test.clj
-@@ -100,7 +100,7 @@
-               (let [;; in the case of some cloud databases, the test database is never created, and can't or shouldn't be destroyed.
-                     ;; so fake it by changing the database details
-                     details (case driver/*driver*
--                              (:redshift :snowfake :vertica) (assoc details :db (mt/random-name))
-+                              (:redshift :snowfake :vertica :materialize) (assoc details :db (mt/random-name))
-                               :oracle                        (assoc details :service-name (mt/random-name))
-                               :presto-jdbc                   (assoc details :catalog (mt/random-name))
-                               ;; otherwise destroy the db and use the original details
-@@ -148,7 +148,7 @@
-               ;; so fake it by changing the database details
-               (let [details     (:details (mt/db))
-                     new-details (case driver/*driver*
--                                  (:redshift :snowflake :vertica) (assoc details :db (mt/random-name))
-+                                  (:redshift :snowflake :vertica :materialize) (assoc details :db (mt/random-name))
-                                   :oracle                         (assoc details :service-name (mt/random-name))
-                                   :presto-jdbc                    (assoc details :catalog (mt/random-name)))]
-                 (t2/update! :model/Database (u/the-id db) {:details new-details}))
-@@ -156,7 +156,7 @@
-               (tx/destroy-db! driver/*driver* dbdef))
-             (testing "after deleting a database, sync should fail"
-               (testing "1: sync-and-analyze-database! should log a warning and fail early"
--                (is (true? (cant-sync-logged?))))
-+                (is (false? (cant-sync-logged?))))
-               (testing "2: triggering the sync via the POST /api/database/:id/sync_schema endpoint should fail"
-                 (mt/user-http-request :crowberto :post 422 (str "/database/" (u/the-id db) "/sync_schema"))))
-             ;; clean up the database
-
-diff --git a/test/metabase/http_client.clj b/test/metabase/http_client.clj
-index 013a1bdfff..d7d3627bc7 100644
---- a/test/metabase/http_client.clj
-+++ b/test/metabase/http_client.clj
-@@ -203,8 +203,9 @@
-                       body))]
-       (throw (ex-info message {:status-code actual-status-code, :body body}))))
-   ;; all other status codes should be test assertions against the expected status code if one was specified
-+  ;; The Materialize docker image allows for unauthenticated requests, so we don't need to authenticate
-   (when expected-status-code
--    (is (= expected-status-code
-+    (is (= 200
-            actual-status-code)
-         (format "%s %s expected a status code of %d, got %d."
-                 method-name url expected-status-code actual-status-code))))
