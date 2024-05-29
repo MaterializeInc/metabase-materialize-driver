@@ -44,7 +44,7 @@ Next, use the following information to connect:
 | Host              | Materialize host name. |
 | Port              | **6875**               |
 | Database name     | **materialize**        |
-| Cluster name      | **default**            |
+| Cluster name      | **quickstart**         |
 | Database username | Materialize user.      |
 | Database password | App-specific password. |
 | SSL               | **Enabled**            |

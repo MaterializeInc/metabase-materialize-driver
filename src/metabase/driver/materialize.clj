@@ -60,7 +60,7 @@
 ; ;;; +----------------------------------------------------------------------------------------------------------------+
 
 (def ^:private default-materialize-connection-details
-  {:host "materialize", :port 6875, :db "materialize", :cluster "default"})
+  {:host "materialize", :port 6875, :db "materialize", :cluster "quickstart"})
 
 (defn- validate-connection-details
   [{:keys [host]}]

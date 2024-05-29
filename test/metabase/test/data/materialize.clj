@@ -46,7 +46,7 @@
    {:host     (tx/db-test-env-var-or-throw :materialize :host "localhost")
     :ssl      (tx/db-test-env-var :materialize :ssl false)
     :port     (tx/db-test-env-var-or-throw :materialize :port 6877)
-    :cluster  (tx/db-test-env-var :materialize :cluster "default")
+    :cluster  (tx/db-test-env-var :materialize :cluster "quickstart")
     :user     (tx/db-test-env-var-or-throw :materialize :user "mz_system")}
    (when-let [password (tx/db-test-env-var :materialize :password)]
      {:password password})
@@ -84,7 +84,7 @@
     (str/replace sql #", PRIMARY KEY \([^)]+\)" "")))
 
 (defmethod load-data/load-data! :materialize [& args]
-  (apply load-data/load-data-add-ids-chunked! args))
+  (apply load-data/load-data-maybe-add-ids-chunked! args))
 
 (defmethod tx/sorts-nil-first? :materialize
   [_driver _base-type]
