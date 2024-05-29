@@ -65,3 +65,11 @@ index 1de46014c9..d44c94cf0a 100644
                           ;; there is no PK in sparksql
                           :sparksql)
      (mt/dataset (mt/dataset-definition "custom-pk"
+@@ -53,6 +54,7 @@
+                          ;; creating db for athena is expensive and require some extra steps,
+                          ;; so it's not worth testing against, see [[metabase.test.data.athena/*allow-database-creation*]]
+                          :athena
++                         :materialize
+                          ;; there is no PK in sparksql
+                          :sparksql)
+     (mt/dataset composite-pk
