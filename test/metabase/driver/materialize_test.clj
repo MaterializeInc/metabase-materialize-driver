@@ -2,7 +2,7 @@
   (:require
    [clojure.test :refer :all]
    #_{:clj-kondo/ignore [:discouraged-namespace]}
-   [honeysql.format :as hformat]
+   [honey.sql :as sql]
    [metabase.driver :as driver]
    [metabase.driver.materialize :as materialize]
    [metabase.driver.sql-jdbc.connection :as sql-jdbc.conn]
@@ -10,9 +10,7 @@
    [metabase.public-settings.premium-features :as premium-features]
    [metabase.query-processor :as qp]
    [metabase.test.fixtures :as fixtures]
-   [metabase.test :as mt]
-   #_{:clj-kondo/ignore [:discouraged-namespace]}
-   [metabase.util.honeysql-extensions :as hx]))
+   [metabase.test :as mt]))
 
 (set! *warn-on-reflection* true)
 

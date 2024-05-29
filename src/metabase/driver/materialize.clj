@@ -48,6 +48,8 @@
                               :percentile-aggregations   false
                               ;; Disabling the support for the `:connection-impersonation` feature as it's not supported
                               :connection-impersonation  false
+                              ;; Disable uploads
+                              :uploads                   false
                               :test/jvm-timezone-setting false}]
   (defmethod driver/database-supports? [:materialize feature] [_driver _feature _db] supported?))
 
@@ -60,7 +62,7 @@
 ; ;;; +----------------------------------------------------------------------------------------------------------------+
 
 (def ^:private default-materialize-connection-details
-  {:host "materialize", :port 6875, :db "materialize", :cluster "default"})
+  {:host "materialize", :port 6875, :db "materialize", :cluster "quickstart"})
 
 (defn- validate-connection-details
   [{:keys [host]}]

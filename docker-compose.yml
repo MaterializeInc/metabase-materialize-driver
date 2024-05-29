@@ -35,10 +35,11 @@ services:
       - PGPASSWORD=materialize
 
   metabase:
-    image: metabase/metabase:v0.47.1
+    image: metabase/metabase:v0.49.12
     container_name: metabase-with-materialize-driver
     environment:
       'MB_HTTP_TIMEOUT': '5000'
+      'JAVA_OPTS': '-Xms2g -Xmx4g -XX:+UseParallelGC'
     ports:
       - '3000:3000'
     volumes:
