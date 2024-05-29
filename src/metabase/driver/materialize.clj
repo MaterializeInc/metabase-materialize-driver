@@ -49,7 +49,7 @@
                               ;; Disabling the support for the `:connection-impersonation` feature as it's not supported
                               :connection-impersonation  false
                               ;; Disable uploads
-                              :uploads                    false
+                              :uploads                   false
                               :test/jvm-timezone-setting false}]
   (defmethod driver/database-supports? [:materialize feature] [_driver _feature _db] supported?))
 

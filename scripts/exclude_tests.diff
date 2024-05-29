@@ -52,3 +52,16 @@ index 87d225f5ae..343eb1f5f5 100644
                 [["2015-06-01T10:31:00-04:00" 1]
                  ["2015-06-01T16:06:00-04:00" 1]
                  ["2015-06-01T17:23:00-04:00" 1]
+
+diff --git a/test/metabase/test/data/dataset_definition_test.clj b/test/metabase/test/data/dataset_definition_test.clj
+index 1de46014c9..d44c94cf0a 100644
+--- a/test/metabase/test/data/dataset_definition_test.clj
++++ b/test/metabase/test/data/dataset_definition_test.clj
+@@ -13,6 +13,7 @@
+                          ;; creating db for athena is expensive and require some extra steps,
+                          ;; so it's not worth testing against, see [[metabase.test.data.athena/*allow-database-creation*]]
+                          :athena
++                         :materialize
+                          ;; there is no PK in sparksql
+                          :sparksql)
+     (mt/dataset (mt/dataset-definition "custom-pk"
