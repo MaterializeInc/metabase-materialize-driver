@@ -39,7 +39,7 @@ index 87d225f5ae..343eb1f5f5 100644
                 ;; There's a bug here where we are reading in the UTC time as pacific, so we're 7 hours off
                 ;; (This is fixed for Oracle now)
 -               (and (qp.test-util/tz-shifted-driver-bug? driver/*driver*) (not= driver/*driver* :oracle))
-+               (and (qp.test-util/tz-shifted-driver-bug? driver/*driver*) (not= driver/*driver* :oracle) not= driver/*driver* :materialize))
++               (and (qp.test-util/tz-shifted-driver-bug? driver/*driver*) (not= driver/*driver* :oracle) (not= driver/*driver* :materialize))
                 [["2015-06-01T10:31:00-07:00" 1]
                  ["2015-06-01T16:06:00-07:00" 1]
                  ["2015-06-01T17:23:00-07:00" 1]
@@ -48,7 +48,7 @@ index 87d225f5ae..343eb1f5f5 100644
                  ["2015-06-02 11:11:00" 1]]
 
 -               (and (qp.test-util/tz-shifted-driver-bug? driver/*driver*) (not= driver/*driver* :oracle))
-+               (and (qp.test-util/tz-shifted-driver-bug? driver/*driver*) (not= driver/*driver* :oracle) not= driver/*driver* :materialize))
++               (and (qp.test-util/tz-shifted-driver-bug? driver/*driver*) (not= driver/*driver* :oracle) (not= driver/*driver* :materialize))
                 [["2015-06-01T10:31:00-04:00" 1]
                  ["2015-06-01T16:06:00-04:00" 1]
                  ["2015-06-01T17:23:00-04:00" 1]
