@@ -59,7 +59,7 @@ sudo -- sh -c "echo 127.0.0.1 materialize >> /etc/hosts"
 * Start Materialize as a Docker container
 
 ```bash
-docker compose -f modules/drivers/materialize/docker-compose.yml up -d materialize init
+docker compose -f modules/drivers/materialize/docker-compose.yml up -d materialize
 ```
 
 Now, you should be able to run the tests:

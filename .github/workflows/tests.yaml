@@ -41,7 +41,6 @@ jobs:
           compose-file: "modules/drivers/materialize/docker-compose.yml"
           services: |
             materialize
-            init
 
       # Apply the scripts/exclude_tests.diff patch to exclude tests that are not relevant to Materialize
       - name: Apply exclude_tests.diff
