@@ -9,6 +9,7 @@ services:
       - --availability-zone=test1
       - --availability-zone=test2
       - --bootstrap-role=materialize
+      - --system-parameter-default=max_tables=1000
     ports:
       - 6875:6875
       - 6877:6877
@@ -19,20 +20,6 @@ services:
         interval: 1s,
         start_period: 35s,
       }
-  init:
-    image: postgres:15.3-alpine3.18
-    depends_on:
-      - materialize
-    command: >-
-      sh -c '
-      echo "Waiting for materialized to start..." &&
-      sleep 15 &&
-      echo "Set Materialize max_tables to 1000" &&
-      psql -h materialize -U mz_system -d materialize -p 6877 -c "ALTER SYSTEM SET max_tables = 1000;" &&
-      psql -h materialize -U materialize -d materialize -p 6875 -c "SHOW max_tables;"
-      '
-    environment:
-      - PGPASSWORD=materialize
 
   metabase:
     image: metabase/metabase:v0.49.12
