@@ -2,6 +2,8 @@
   "Metabase Materialize Driver."
   (:require [clojure
              [set :as set]]
+            [honey.sql :as sql]
+            [honey.sql.helpers :as sql.helpers]
             [metabase.db.spec :as db.spec]
             [metabase.config :as config]
             [metabase.driver :as driver]
@@ -9,6 +11,7 @@
             [metabase.driver.sql-jdbc.execute :as sql-jdbc.execute]
             [metabase.driver.sql.query-processor :as sql.qp]
             [metabase.util.honey-sql-2 :as h2x]
+            [metabase.driver.sync :as driver.s]
             [metabase.driver.sql-jdbc
              [common :as sql-jdbc.common]
              [connection :as sql-jdbc.conn]
@@ -88,3 +91,56 @@
   (sql-jdbc.sync/describe-table driver database table))
 
 (defmethod sql-jdbc.sync/excluded-schemas :materialize [_driver] #{"mz_catalog" "mz_internal" "pg_catalog"})
+
+(defn ^:private get-tables-sql
+  "Materialize doesn't support the pg_stat_user_tables table
+   Overriding the default implementation to exclude the pg_stat_user_tables table"
+  [schemas table-names]
+  (sql/format
+   (cond->  {:select    [[:n.nspname :schema]
+                         [:c.relname :name]
+                         [[:case-expr :c.relkind
+                           [:inline "r"] [:inline "TABLE"]
+                           [:inline "p"] [:inline "PARTITIONED TABLE"]
+                           [:inline "v"] [:inline "VIEW"]
+                           [:inline "f"] [:inline "FOREIGN TABLE"]
+                           [:inline "m"] [:inline "MATERIALIZED VIEW"]
+                           :else nil]
+                          :type]
+                         [:d.description :description]]
+             :from      [[:pg_catalog.pg_class :c]]
+             :join      [[:pg_catalog.pg_namespace :n]   [:= :c.relnamespace :n.oid]]
+             :left-join [[:pg_catalog.pg_description :d] [:and [:= :c.oid :d.objoid] 
+                                                               [:= :d.objsubid 0] 
+                                                               [:= :d.classoid [:raw "'pg_class'::regclass"]]]]
+             :where     [:and [:= :c.relnamespace :n.oid]
+                         ;; filter out system tables (pg_ and mz_)
+                         [:and
+                          [(keyword "!~") :n.nspname "^pg_"]
+                          [(keyword "!~") :n.nspname "^mz_"]
+                          [:<> :n.nspname "information_schema"]]
+                         ;; only get tables of type: TABLE, PARTITIONED TABLE, VIEW, FOREIGN TABLE, MATERIALIZED VIEW
+                         [:raw "c.relkind in ('r', 'p', 'v', 'f', 'm')"]]
+             :order-by  [:type :schema :name]}
+     (seq schemas)
+     (sql.helpers/where [:in :n.nspname schemas])
+
+     (seq table-names)
+     (sql.helpers/where [:in :c.relname table-names]))
+   {:dialect :ansi}))
+
+(defn- describe-database-tables
+  [database]
+  (let [[inclusion-patterns
+         exclusion-patterns] (driver.s/db-details->schema-filter-patterns database)
+        syncable? (fn [schema]
+                    (driver.s/include-schema? inclusion-patterns exclusion-patterns schema))]
+    (eduction
+     (comp (filter (comp syncable? :schema))
+           (map #(dissoc % :type)))
+     (sql-jdbc.execute/reducible-query database (get-tables-sql nil nil)))))
+
+(defmethod driver/describe-database :materialize
+ [_driver database]
+  ;; TODO: change this to return a reducible so we don't have to hold 100k tables in memory in a set like this
+  {:tables (into #{} (describe-database-tables database))})
