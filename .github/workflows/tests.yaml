@@ -36,7 +36,7 @@ jobs:
           sudo echo "127.0.0.1 materialize" | sudo tee -a /etc/hosts
 
       - name: Start Materialize in Docker
-        uses: isbang/compose-action@v1.4.1
+        uses: hoverkraft-tech/compose-action@v2.0.1
         with:
           compose-file: "modules/drivers/materialize/docker-compose.yml"
           services: |
