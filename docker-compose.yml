@@ -10,6 +10,8 @@ services:
       - --availability-zone=test2
       - --bootstrap-role=materialize
       - --system-parameter-default=max_tables=1000
+    environment:
+      MZ_NO_TELEMETRY: 1
     ports:
       - 6875:6875
       - 6877:6877
