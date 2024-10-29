@@ -62,6 +62,12 @@ sudo -- sh -c "echo 127.0.0.1 materialize >> /etc/hosts"
 docker compose -f modules/drivers/materialize/docker-compose.yml up -d materialize
 ```
 
+* To use a specific Java version, you can set the `JAVA_HOME` environment variable:
+
+```bash
+export JAVA_HOME=$(/usr/libexec/java_home -v 17) ; export PATH=$JAVA_HOME/bin:$PATH
+```
+
 Now, you should be able to run the tests:
 
 ```bash
