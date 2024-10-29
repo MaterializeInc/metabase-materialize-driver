@@ -75,7 +75,8 @@
 (defmethod sql-jdbc.conn/connection-details->spec :materialize
   [_ details]
   (let [merged-details (merge default-materialize-connection-details details)
-        driver-version "v1.2.0"
+        ;; TODO: get the driver version from the plugin manifest instead of hardcoding it
+        driver-version "v1.2.1"
         app-name       (format "Metabase Materialize driver %s %s"
                              driver-version
                              config/mb-app-id-string)]
