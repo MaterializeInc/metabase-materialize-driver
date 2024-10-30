@@ -74,7 +74,12 @@
 
 (defmethod sql-jdbc.conn/connection-details->spec :materialize
   [_ details]
-  (let [merged-details (merge default-materialize-connection-details details)]
+  (let [merged-details (merge default-materialize-connection-details details)
+        ;; TODO: get the driver version from the plugin manifest instead of hardcoding it
+        driver-version "v1.2.1"
+        app-name       (format "Metabase Materialize driver %s %s"
+                             driver-version
+                             config/mb-app-id-string)]
     (validate-connection-details merged-details)
     (let [{:keys [host port db cluster ssl], :as opts} merged-details]
       (sql-jdbc.common/handle-additional-options
@@ -83,7 +88,8 @@
          :subprotocol                   "postgresql"
          :subname                       (str "//" host ":" port "/" db "?options=--cluster%3D" cluster)
          :sslmode                       (if ssl "require" "disable")
-         :OpenSourceSubProtocolOverride false}
+         :OpenSourceSubProtocolOverride false
+         :ApplicationName               app-name}
         (dissoc opts :host :port :db :cluster :ssl))))))
 
 (defmethod driver/describe-table :materialize
