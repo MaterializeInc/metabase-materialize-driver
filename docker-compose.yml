@@ -10,6 +10,7 @@ services:
       - --availability-zone=test2
       - --bootstrap-role=materialize
       - --system-parameter-default=max_tables=1000
+      - --system-parameter-default=max_connections=10000
     environment:
       MZ_NO_TELEMETRY: 1
     ports:
@@ -24,7 +25,7 @@ services:
       }
 
   metabase:
-    image: metabase/metabase:v0.50.10
+    image: metabase/metabase:v0.51.9
     container_name: metabase-with-materialize-driver
     environment:
       'MB_HTTP_TIMEOUT': '5000'

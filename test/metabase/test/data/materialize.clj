@@ -83,17 +83,22 @@
         sql      ((get-method sql.tx/create-table-sql :sql/test-extensions) driver dbdef tabledef)]
     (str/replace sql #", PRIMARY KEY \([^)]+\)" "")))
 
-(defmethod load-data/load-data! :materialize [& args]
-  (apply load-data/load-data-maybe-add-ids-chunked! args))
+(defmethod load-data/row-xform :materialize
+  [_driver _dbdef tabledef]
+  (load-data/maybe-add-ids-xform tabledef))
+
+(defmethod load-data/chunk-size :materialize
+  [_driver _dbdef _tabledef]
+  400)
 
 (defmethod tx/sorts-nil-first? :materialize
   [_driver _base-type]
   false)
 
-(defmethod tx/supports-time-type? :materialize
-  [_driver]
+(defmethod driver/database-supports? [:materialize :test/time-type]
+  [_driver _feature _database]
   false)
 
-(defmethod tx/supports-timestamptz-type? :materialize
-  [_driver]
+(defmethod driver/database-supports? [:materialize :test/timestamptz-type]
+  [_driver _feature _database]
   false)
