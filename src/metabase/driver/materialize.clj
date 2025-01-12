@@ -51,6 +51,7 @@
                               :percentile-aggregations   false
                               ;; Disabling the support for the `:connection-impersonation` feature as it's not supported
                               :connection-impersonation  false
+                              :metadata/key-constraints  false
                               ;; Disable uploads
                               :uploads                   false
                               :test/jvm-timezone-setting false}]
