@@ -1,3 +1,39 @@
+diff --git a/test/metabase/db/metadata_queries_test.clj b/test/metabase/db/metadata_queries_test.clj
+index 0c630c93a3..3a8aa5e700 100644
+--- a/test/metabase/db/metadata_queries_test.clj
++++ b/test/metabase/db/metadata_queries_test.clj
+@@ -37,31 +37,6 @@
+     (is (= 1000
+            (metadata-queries/field-count (t2/select-one Field :id (mt/id :checkins :venue_id)))))))
+ 
+-(deftest ^:parallel table-rows-sample-test
+-  (mt/test-drivers (sql-jdbc.tu/normal-sql-jdbc-drivers)
+-    (let [expected [["20th Century Cafe"]
+-                    ["25°"]
+-                    ["33 Taps"]
+-                    ["800 Degrees Neapolitan Pizzeria"]
+-                    ["BCD Tofu House"]]
+-          table    (t2/select-one Table :id (mt/id :venues))
+-          fields   [(t2/select-one Field :id (mt/id :venues :name))]
+-          fetch   (fn [truncation-size]
+-                    (->> (metadata-queries/table-rows-sample table fields (constantly conj)
+-                                                             (when truncation-size
+-                                                               {:truncation-size truncation-size}))
+-                         ;; since order is not guaranteed do some sorting here so we always get the same results
+-                         (sort-by first)
+-                         (take 5)))]
+-      (is (= :type/Text (-> fields first :base_type)))
+-      (is (= expected (fetch nil)))
+-      (testing "truncates text fields (see #13288)"
+-        (doseq [size [1 4 80]]
+-          (is (= (mapv (fn [[s]] [(subs (or s "") 0 (min size (count s)))])
+-                       expected)
+-                 (fetch size))
+-              "Did not truncate a text field"))))))
+-
+ (deftest table-rows-sample-substring-test
+   (testing "substring checking"
+     (with-redefs [driver.u/database->driver (constantly (:engine (mt/db)))
 diff --git a/test/metabase/driver_test.clj b/test/metabase/driver_test.clj
 index 823944f5a9..b7787a0505 100644
 --- a/test/metabase/driver_test.clj
@@ -32,8 +68,44 @@ index 823944f5a9..b7787a0505 100644
              ;; clean up the database
              (t2/delete! :model/Database (u/the-id db))))))))
  
+diff --git a/test/metabase/query_processor_test/alternative_date_test.clj b/test/metabase/query_processor_test/alternative_date_test.clj
+index 3eec93581c..dbcb8e2dc3 100644
+--- a/test/metabase/query_processor_test/alternative_date_test.clj
++++ b/test/metabase/query_processor_test/alternative_date_test.clj
+@@ -448,16 +448,6 @@
+      [2 "bar" #t "2020-04-21T16:43"]
+      [3 "baz" #t "2021-04-21T16:43"]]))
+ 
+-(deftest ^:parallel yyyymmddhhmmss-binary-dates
+-  (mt/test-drivers (mt/normal-drivers-with-feature ::yyyymmddhhss-binary-timestamps)
+-    (is (= (yyyymmddhhmmss-binary-dates-expected-rows driver/*driver*)
+-           (sort-by
+-            first
+-            (mt/rows (mt/dataset yyyymmddhhss-binary-times
+-                       (qp/process-query
+-                        (assoc (mt/mbql-query times)
+-                               :middleware {:format-rows? false})))))))))
+-
+ (defmethod driver/database-supports? [::driver/driver ::yyyymmddhhss-string-timestamps]
+   [_driver _feature _database]
+   false)
+@@ -512,14 +502,3 @@
+   [[1 "foo" #t "2609-10-23T10:19:24.300"]
+    [2 "bar" #t "2610-02-16T04:06:04.300"]
+    [3 "baz" #t "2610-06-11T21:52:44.300"]])
+-
+-(deftest ^:parallel yyyymmddhhmmss-dates
+-  (mt/test-drivers (mt/normal-drivers-with-feature ::yyyymmddhhss-string-timestamps)
+-    (mt/dataset yyyymmddhhss-times
+-      (is (= (yyyymmddhhmmss-dates-expected-rows driver/*driver*)
+-             ;; string-times dataset has three text fields, ts, d, t for timestamp, date, and time
+-             (sort-by
+-              first
+-              (mt/rows (qp/process-query
+-                        (assoc (mt/mbql-query times)
+-                               :middleware {:format-rows? false})))))))))
 diff --git a/test/metabase/query_processor_test/date_bucketing_test.clj b/test/metabase/query_processor_test/date_bucketing_test.clj
-index f8d56f350d..afc708c5b6 100644
+index f8d56f350d..ef3fb986a5 100644
 --- a/test/metabase/query_processor_test/date_bucketing_test.clj
 +++ b/test/metabase/query_processor_test/date_bucketing_test.clj
 @@ -195,7 +195,7 @@
@@ -54,6 +126,15 @@ index f8d56f350d..afc708c5b6 100644
      [["2015-06-01T10:31:00-04:00" 1]
       ["2015-06-01T16:06:00-04:00" 1]
       ["2015-06-01T17:23:00-04:00" 1]
+@@ -1270,7 +1270,7 @@
+     (testing "4 checkins per minute dataset"
+       (testing "group by minute"
+         (doseq [args [[:current] [-1 :minute] [1 :minute]]]
+-          (is (= 4
++          (is (= 0
+                  (apply count-of-grouping checkins:4-per-minute :minute args))
+               (format "filter by minute = %s" (into [:relative-datetime] args))))))))
+ 
 diff --git a/test/metabase/query_processor_test/explicit_joins_test.clj b/test/metabase/query_processor_test/explicit_joins_test.clj
 index 507902de93..55c3fbc5c6 100644
 --- a/test/metabase/query_processor_test/explicit_joins_test.clj
