@@ -150,3 +150,46 @@
  [_driver database]
   ;; TODO: change this to return a reducible so we don't have to hold 100k tables in memory in a set like this
   {:tables (into #{} (describe-database-tables database))})
+
+;; Overriding the default implementation to exclude the usage of the `format` function as it's not supported in Materialize
+(defmethod sql-jdbc.sync/describe-fields-sql :materialize
+  [driver & {:keys [schema-names table-names]}]
+  (sql/format
+   {:select [[:c.column_name :name]
+             [:c.data_type :database-type]
+             [[:- :c.ordinal_position [:inline 1]] :database-position]
+             [:c.table_schema :table-schema]
+             [:c.table_name :table-name]
+             [[:not= :pk.column_name nil] :pk?]
+             ;; Materialize doesn't support column comments
+             [nil :field-comment]
+             ;; Materialize doesn't enforce NOT NULL constraints
+             [false :database-required]
+             ;; Materialize doesn't support auto-increment
+             [false :database-is-auto-increment]]
+    :from [[:information_schema.columns :c]]
+    :left-join [[{:select [:tc.table_schema
+                           :tc.table_name
+                           :kc.column_name]
+                  :from [[:information_schema.table_constraints :tc]]
+                  :join [[:information_schema.key_column_usage :kc]
+                         [:and
+                          [:= :tc.constraint_name :kc.constraint_name]
+                          [:= :tc.table_schema :kc.table_schema]
+                          [:= :tc.table_name :kc.table_name]]]
+                  :where [:= :tc.constraint_type [:inline "PRIMARY KEY"]]}
+                 :pk]
+                [:and
+                 [:= :c.table_schema :pk.table_schema]
+                 [:= :c.table_name :pk.table_name]
+                 [:= :c.column_name :pk.column_name]]]
+    :where [:and
+            [:raw "c.table_schema NOT IN ('mz_catalog', 'mz_internal', 'pg_catalog', 'information_schema')"]
+            (when (seq schema-names)
+              [:in :c.table_schema schema-names])
+            (when (seq table-names)
+              [:in :c.table_name table-names])]
+    :order-by [[:c.table_schema :asc]
+               [:c.table_name :asc]
+               [:c.ordinal_position :asc]]}
+   :dialect (sql.qp/quote-style driver)))

@@ -6,12 +6,16 @@
    [metabase.config :as config]
    [metabase.driver :as driver]
    [metabase.driver.ddl.interface :as ddl.i]
+   [metabase.driver.sql-jdbc.connection :as sql-jdbc.conn]
+   [metabase.driver.sql-jdbc.execute :as sql-jdbc.execute]
    [metabase.test.data.interface :as tx]
    [metabase.test.data.sql :as sql.tx]
+   [metabase.test.data.sql-jdbc :as sql-jdbc.tx]
    [metabase.test.data.sql-jdbc.execute :as execute]
    [metabase.test.data.sql-jdbc.load-data :as load-data]
    [metabase.test.data.sql.ddl :as ddl]
-   [metabase.util.log :as log]))
+   [metabase.util.log :as log]
+   [metabase.util.malli :as mu]))
 
 (set! *warn-on-reflection* true)
 
@@ -86,6 +90,26 @@
 (defmethod load-data/row-xform :materialize
   [_driver _dbdef tabledef]
   (load-data/maybe-add-ids-xform tabledef))
+
+(defmethod tx/dataset-already-loaded? :materialize
+  [driver dbdef]
+  ;; check and make sure the first table in the dbdef has been created.
+  (let [tabledef    (first (:table-definitions dbdef))
+        table-name  (tx/db-qualified-table-name (:database-name dbdef) (:table-name tabledef))]
+    (sql-jdbc.execute/do-with-connection-with-options
+     driver
+     (sql-jdbc.conn/connection-details->spec
+      driver
+      (tx/dbdef->connection-details driver :db dbdef))
+     {:write? false}
+     (fn [^java.sql.Connection conn]
+       (with-open [rset (.getTables (.getMetaData conn)
+                                   nil       ; catalog
+                                   "public"  ; schema
+                                   table-name
+                                   (into-array String ["TABLE"]))]
+         ;; if the ResultSet returns anything we know the table is already loaded.
+         (.next rset))))))
 
 (defmethod load-data/chunk-size :materialize
   [_driver _dbdef _tabledef]
