@@ -93,22 +93,19 @@
 
 (defmethod tx/dataset-already-loaded? :materialize
   [driver dbdef]
-  ;; check and make sure the first table in the dbdef has been created.
   (let [tabledef    (first (:table-definitions dbdef))
-        table-name  (tx/db-qualified-table-name (:database-name dbdef) (:table-name tabledef))]
+        schema-name "public"
+        table-name  (:table-name tabledef)]
     (sql-jdbc.execute/do-with-connection-with-options
      driver
-     (sql-jdbc.conn/connection-details->spec
-      driver
-      (tx/dbdef->connection-details driver :db dbdef))
+     (sql-jdbc.conn/connection-details->spec driver (tx/dbdef->connection-details driver :db dbdef))
      {:write? false}
      (fn [^java.sql.Connection conn]
        (with-open [rset (.getTables (.getMetaData conn)
-                                   nil       ; catalog
-                                   "public"  ; schema
-                                   table-name
-                                   (into-array String ["TABLE"]))]
-         ;; if the ResultSet returns anything we know the table is already loaded.
+                                  nil          ; catalog
+                                  schema-name  ; schema
+                                  table-name   ; table
+                                  (into-array String ["TABLE"]))]
          (.next rset))))))
 
 (defmethod load-data/chunk-size :materialize
