@@ -172,24 +172,6 @@ index f8d56f350d..ef3fb986a5 100644
                   (apply count-of-grouping checkins:4-per-minute :minute args))
                (format "filter by minute = %s" (into [:relative-datetime] args))))))))
  
-diff --git a/test/metabase/query_processor_test/explicit_joins_test.clj b/test/metabase/query_processor_test/explicit_joins_test.clj
-index 507902de93..55c3fbc5c6 100644
---- a/test/metabase/query_processor_test/explicit_joins_test.clj
-+++ b/test/metabase/query_processor_test/explicit_joins_test.clj
-@@ -277,11 +277,11 @@
-   [_driver _feature _database]
-   true)
- 
--;;; mongodb doesn't support foreign keys required by some tests below.
-+;;; mongodb and materialize do't support foreign keys required by some tests below.
- ;;;
- ;;; TODO -- not sure what exactly this means. Maybe it was talking about marking FKs automatically during sync? Since we
- ;;; now do that manually for DBs like MongoDB maybe we can enable these tests for Mongo.
--(defmethod driver/database-supports? [:mongo ::foreign-keys-as-required-by-tests]
-+(defmethod driver/database-supports? [:materialize ::foreign-keys-as-required-by-tests]
-   [_driver _feature _database]
-   false)
- 
 diff --git a/test/metabase/test/data/dataset_definition_test.clj b/test/metabase/test/data/dataset_definition_test.clj
 index b5bd814af2..6b4539c7f9 100644
 --- a/test/metabase/test/data/dataset_definition_test.clj

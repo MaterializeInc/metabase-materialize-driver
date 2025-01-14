@@ -32,6 +32,7 @@
 
 (doseq [[feature supported?] {:foreign-keys              (not config/is-test?)
                               :metadata/key-constraints  (not config/is-test?)
+                              :foreign-keys-as-required-by-tests false
                               ;; Materialize defaults to UTC, and this is the only supported value
                               :set-timezone              false
                               :datetime-diff             false
