@@ -6,12 +6,16 @@
    [metabase.config :as config]
    [metabase.driver :as driver]
    [metabase.driver.ddl.interface :as ddl.i]
+   [metabase.driver.sql-jdbc.connection :as sql-jdbc.conn]
+   [metabase.driver.sql-jdbc.execute :as sql-jdbc.execute]
    [metabase.test.data.interface :as tx]
    [metabase.test.data.sql :as sql.tx]
+   [metabase.test.data.sql-jdbc :as sql-jdbc.tx]
    [metabase.test.data.sql-jdbc.execute :as execute]
    [metabase.test.data.sql-jdbc.load-data :as load-data]
    [metabase.test.data.sql.ddl :as ddl]
-   [metabase.util.log :as log]))
+   [metabase.util.log :as log]
+   [metabase.util.malli :as mu]))
 
 (set! *warn-on-reflection* true)
 
@@ -83,17 +87,39 @@
         sql      ((get-method sql.tx/create-table-sql :sql/test-extensions) driver dbdef tabledef)]
     (str/replace sql #", PRIMARY KEY \([^)]+\)" "")))
 
-(defmethod load-data/load-data! :materialize [& args]
-  (apply load-data/load-data-maybe-add-ids-chunked! args))
+(defmethod load-data/row-xform :materialize
+  [_driver _dbdef tabledef]
+  (load-data/maybe-add-ids-xform tabledef))
+
+(defmethod tx/dataset-already-loaded? :materialize
+  [driver dbdef]
+  (let [tabledef    (first (:table-definitions dbdef))
+        schema-name "public"
+        table-name  (:table-name tabledef)]
+    (sql-jdbc.execute/do-with-connection-with-options
+     driver
+     (sql-jdbc.conn/connection-details->spec driver (tx/dbdef->connection-details driver :db dbdef))
+     {:write? false}
+     (fn [^java.sql.Connection conn]
+       (with-open [rset (.getTables (.getMetaData conn)
+                                  nil          ; catalog
+                                  schema-name  ; schema
+                                  table-name   ; table
+                                  (into-array String ["TABLE"]))]
+         (.next rset))))))
+
+(defmethod load-data/chunk-size :materialize
+  [_driver _dbdef _tabledef]
+  400)
 
 (defmethod tx/sorts-nil-first? :materialize
   [_driver _base-type]
   false)
 
-(defmethod tx/supports-time-type? :materialize
-  [_driver]
+(defmethod driver/database-supports? [:materialize :test/time-type]
+  [_driver _feature _database]
   false)
 
-(defmethod tx/supports-timestamptz-type? :materialize
-  [_driver]
+(defmethod driver/database-supports? [:materialize :test/timestamptz-type]
+  [_driver _feature _database]
   false)

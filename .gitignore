@@ -3,3 +3,4 @@
 .lsp/
 .cpcache/
 .build
+.DS_Store
