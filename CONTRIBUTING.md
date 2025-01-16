@@ -8,8 +8,8 @@
 ### Requirements
 
 * Clojure 1.11+
-* OpenJDK 17
-* Node.js 18.x
+* OpenJDK 21
+* Node.js 20.x
 * Yarn
 
 For testing: Docker Compose
@@ -24,7 +24,7 @@ The easiest way to set up a development environment is as follows (mostly the sa
 ```bash
 git clone https://github.com/metabase/metabase.git
 cd metabase
-git checkout v0.51.11
+git checkout v0.52.6
 git clone https://github.com/MaterializeInc/metabase-materialize-driver.git modules/drivers/materialize
 ```
 
@@ -65,7 +65,7 @@ docker compose -f modules/drivers/materialize/docker-compose.yml up -d materiali
 * To use a specific Java version, you can set the `JAVA_HOME` environment variable:
 
 ```bash
-export JAVA_HOME=$(/usr/libexec/java_home -v 17) ; export PATH=$JAVA_HOME/bin:$PATH
+export JAVA_HOME=$(/usr/libexec/java_home -v 21) ; export PATH=$JAVA_HOME/bin:$PATH
 ```
 
 Now, you should be able to run the tests:
