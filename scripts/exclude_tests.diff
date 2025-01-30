@@ -34,26 +34,6 @@ index 0c630c93a3..3a8aa5e700 100644
  (deftest table-rows-sample-substring-test
    (testing "substring checking"
      (with-redefs [driver.u/database->driver (constantly (:engine (mt/db)))
-diff --git a/test/metabase/driver/sql_jdbc/sync/describe_table_test.clj b/test/metabase/driver/sql_jdbc/sync/describe_table_test.clj
-index 7f8d27b126..d3f8e2729a 100644
---- a/test/metabase/driver/sql_jdbc/sync/describe_table_test.clj
-+++ b/test/metabase/driver/sql_jdbc/sync/describe_table_test.clj
-@@ -813,10 +813,12 @@
-                              :model/Field
-                              :table_id orders-m-id
-                              {:order-by [:database_position]})]
--            (is (some? orders-m-id))
-+            ;; TODO: Fix this test
-+            ;; (is (some? orders-m-id))
-             (is (some? orders-id))
--            (is (= 9 (count view-fields)))
--            (is (= non-view-fields view-fields))))
-+            ;; (is (= 9 (count view-fields)))
-+            ;; (is (= non-view-fields view-fields))))
-+          ))
-         (catch Exception e
-           (is (nil? e) "This should not happen")
-           (log/error e "Exception occurred."))
 diff --git a/test/metabase/driver_test.clj b/test/metabase/driver_test.clj
 index 036a1612b5..53b35b25b2 100644
 --- a/test/metabase/driver_test.clj
@@ -88,42 +68,6 @@ index 036a1612b5..53b35b25b2 100644
              ;; clean up the database
              (t2/delete! :model/Database (u/the-id db))))))))
  
-diff --git a/test/metabase/query_processor_test/alternative_date_test.clj b/test/metabase/query_processor_test/alternative_date_test.clj
-index 3eec93581c..dbcb8e2dc3 100644
---- a/test/metabase/query_processor_test/alternative_date_test.clj
-+++ b/test/metabase/query_processor_test/alternative_date_test.clj
-@@ -448,16 +448,6 @@
-      [2 "bar" #t "2020-04-21T16:43"]
-      [3 "baz" #t "2021-04-21T16:43"]]))
- 
--(deftest ^:parallel yyyymmddhhmmss-binary-dates
--  (mt/test-drivers (mt/normal-drivers-with-feature ::yyyymmddhhss-binary-timestamps)
--    (is (= (yyyymmddhhmmss-binary-dates-expected-rows driver/*driver*)
--           (sort-by
--            first
--            (mt/rows (mt/dataset yyyymmddhhss-binary-times
--                       (qp/process-query
--                        (assoc (mt/mbql-query times)
--                               :middleware {:format-rows? false})))))))))
--
- (defmethod driver/database-supports? [::driver/driver ::yyyymmddhhss-string-timestamps]
-   [_driver _feature _database]
-   false)
-@@ -512,14 +502,3 @@
-   [[1 "foo" #t "2609-10-23T10:19:24.300"]
-    [2 "bar" #t "2610-02-16T04:06:04.300"]
-    [3 "baz" #t "2610-06-11T21:52:44.300"]])
--
--(deftest ^:parallel yyyymmddhhmmss-dates
--  (mt/test-drivers (mt/normal-drivers-with-feature ::yyyymmddhhss-string-timestamps)
--    (mt/dataset yyyymmddhhss-times
--      (is (= (yyyymmddhhmmss-dates-expected-rows driver/*driver*)
--             ;; string-times dataset has three text fields, ts, d, t for timestamp, date, and time
--             (sort-by
--              first
--              (mt/rows (qp/process-query
--                        (assoc (mt/mbql-query times)
--                               :middleware {:format-rows? false})))))))))
 diff --git a/test/metabase/query_processor_test/date_bucketing_test.clj b/test/metabase/query_processor_test/date_bucketing_test.clj
 index f8d56f350d..ef3fb986a5 100644
 --- a/test/metabase/query_processor_test/date_bucketing_test.clj
