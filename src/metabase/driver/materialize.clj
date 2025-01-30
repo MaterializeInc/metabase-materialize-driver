@@ -46,9 +46,7 @@
                               :nested-field-columns      (not config/is-test?)
                               ;; Disabling nested queries during tests as they try to use Foreign Keys
                               :nested-queries            (not config/is-test?)
-                              ;; Disabling the expressions support due to the following error:
-                              ;; Error executing query: ERROR: function substring(text, character varying) does not exist
-                              :expressions               false
+                              :regex                     false
                               ;; Disabling model caching:
                               :persist-models            false
                               ;; Disable percentile aggregations due to missing support for PERCENTILE_CONT
