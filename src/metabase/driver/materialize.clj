@@ -8,6 +8,9 @@
             [metabase.config :as config]
             [metabase.driver :as driver]
             [metabase.util :as u]
+            [metabase.query-processor-test.alternative-date-test :as alternative-date-test]
+            [metabase.query-processor-test.date-bucketing-test :as date-bucketing-test]
+            [metabase.driver.sql-jdbc.sync.describe-table-test :as describe-table-test]
             [metabase.driver.sql-jdbc.execute :as sql-jdbc.execute]
             [metabase.driver.sql.query-processor :as sql.qp]
             [metabase.util.honey-sql-2 :as h2x]
@@ -46,7 +49,7 @@
                               :nested-queries            (not config/is-test?)
                               ;; Disabling the expressions support due to the following error:
                               ;; Error executing query: ERROR: function substring(text, character varying) does not exist
-                              :expressions               false
+                              :expressions               true
                               ;; Disabling model caching:
                               :persist-models            false
                               ;; Disable percentile aggregations due to missing support for PERCENTILE_CONT
@@ -78,7 +81,7 @@
   [_ details]
   (let [merged-details (merge default-materialize-connection-details details)
         ;; TODO: get the driver version from the plugin manifest instead of hardcoding it
-        driver-version "v1.4.1"
+        driver-version "v1.4.2"
         app-name       (format "Metabase Materialize driver %s %s"
                              driver-version
                              config/mb-app-id-string)]
@@ -195,3 +198,64 @@
                [:c.table_name :asc]
                [:c.ordinal_position :asc]]}
    :dialect (sql.qp/quote-style driver)))
+
+(defmethod sql.qp/cast-temporal-string [:materialize :Coercion/YYYYMMDDHHMMSSString->Temporal]
+  [_driver _coercion-strategy expr]
+  [:make_timestamp
+   [:cast [:substring expr (int 1) (int 4)] :integer]
+   [:cast [:substring expr (int 5) (int 2)] :integer]
+   [:cast [:substring expr (int 7) (int 2)] :integer]
+   [:cast [:substring expr (int 9) (int 2)] :integer]
+   [:cast [:substring expr (int 11) (int 2)] :integer]
+   [:cast [:substring expr (int 13) (int 2)] :integer]])
+
+(defmethod driver/database-supports? [:materialize :describe-table-test/describe-view-fields]
+  [_driver _feature _database]
+  true)
+
+(defmethod driver/database-supports? [:materialize ::describe-table-test/describe-materialized-view-fields]
+  [_driver _feature _database]
+  false)
+
+(defmethod driver/database-supports? [:materialize :test/creates-db-on-connect]
+  [_driver _feature _database]
+  true)
+
+
+(defmethod  alternative-date-test/yyyymmddhhmmss-binary-dates-expected-rows :materialize
+  [_driver]
+  [[1 "foo" #t "2019-04-21T16:43"]
+   [2 "bar" #t "2020-04-21T16:43"]
+   [3 "baz" #t "2021-04-21T16:43"]])
+
+(defmethod  alternative-date-test/yyyymmddhhmmss-dates-expected-rows :materialize
+  [_driver]
+  [[1 "foo" #t "2019-04-21T16:43"]
+   [2 "bar" #t "2020-04-21T16:43"]
+   [3 "baz" #t "2021-04-21T16:43"]])
+
+(defmethod date-bucketing-test/group-by-default-test-expected-rows :materialize
+  [_driver]
+  [["2015-06-01T10:31:00Z" 1]
+   ["2015-06-01T16:06:00Z" 1]
+   ["2015-06-01T17:23:00Z" 1]
+   ["2015-06-01T18:55:00Z" 1]
+   ["2015-06-01T21:04:00Z" 1]
+   ["2015-06-01T21:19:00Z" 1]
+   ["2015-06-02T02:13:00Z" 1]
+   ["2015-06-02T05:37:00Z" 1]
+   ["2015-06-02T08:20:00Z" 1]
+   ["2015-06-02T11:11:00Z" 1]])
+
+(defmethod date-bucketing-test/group-by-default-test-2-expected-rows :materialize
+  [_driver]
+  [["2015-06-01T10:31:00Z" 1]
+   ["2015-06-01T16:06:00Z" 1]
+   ["2015-06-01T17:23:00Z" 1]
+   ["2015-06-01T18:55:00Z" 1]
+   ["2015-06-01T21:04:00Z" 1]
+   ["2015-06-01T21:19:00Z" 1]
+   ["2015-06-02T02:13:00Z" 1]
+   ["2015-06-02T05:37:00Z" 1]
+   ["2015-06-02T08:20:00Z" 1]
+   ["2015-06-02T11:11:00Z" 1]])
