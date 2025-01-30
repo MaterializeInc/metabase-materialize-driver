@@ -10,7 +10,6 @@
             [metabase.util :as u]
             [metabase.query-processor-test.alternative-date-test :as alternative-date-test]
             [metabase.query-processor-test.date-bucketing-test :as date-bucketing-test]
-            [metabase.driver.sql-jdbc.sync.describe-table-test :as describe-table-test]
             [metabase.driver.sql-jdbc.execute :as sql-jdbc.execute]
             [metabase.driver.sql.query-processor :as sql.qp]
             [metabase.util.honey-sql-2 :as h2x]
@@ -208,19 +207,6 @@
    [:cast [:substring expr (int 9) (int 2)] :integer]
    [:cast [:substring expr (int 11) (int 2)] :integer]
    [:cast [:substring expr (int 13) (int 2)] :integer]])
-
-(defmethod driver/database-supports? [:materialize :describe-table-test/describe-view-fields]
-  [_driver _feature _database]
-  true)
-
-(defmethod driver/database-supports? [:materialize ::describe-table-test/describe-materialized-view-fields]
-  [_driver _feature _database]
-  false)
-
-(defmethod driver/database-supports? [:materialize :test/creates-db-on-connect]
-  [_driver _feature _database]
-  true)
-
 
 (defmethod  alternative-date-test/yyyymmddhhmmss-binary-dates-expected-rows :materialize
   [_driver]
