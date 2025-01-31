@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: metabase/metabase
-          ref: v0.52.8
+          ref: release-x.52.x
 
       - name: Checkout Driver Repo
         uses: actions/checkout@v3
