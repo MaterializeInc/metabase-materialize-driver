@@ -86,16 +86,6 @@ mz_deps=$(cat modules/drivers/materialize/.github/deps.edn | sed -e "s|PWD|$PWD|
 DRIVERS=materialize clojure -Sdeps ${mz_deps} -X:dev:drivers:drivers-dev:test:user/materialize :only metabase.query-processor.middleware.parameters.mbql-test
 ```
 
-## Excluding tests
-
-Some tests are not applicable to Materialize, and you can exclude them by adding the following to the test command:
-
-```bash
-git apply modules/drivers/materialize/scripts/exclude_tests.diff
-```
-
-The diff file contains the list of tests that are excluded from the Materialize driver. This often needs to be updated as new tests are added to new Metabase versions.
-
 ## Building a jar
 
 You need to add an entry for Materialize in `modules/drivers/deps.edn`
