@@ -8,6 +8,8 @@
    [metabase.driver.ddl.interface :as ddl.i]
    [metabase.driver.sql-jdbc.connection :as sql-jdbc.conn]
    [metabase.driver.sql-jdbc.execute :as sql-jdbc.execute]
+   [metabase.driver.sql-jdbc.sync.describe-table-test :as describe-table-test]
+   [metabase.query-processor-test.alternative-date-test :as alternative-date-test]
    [metabase.test.data.interface :as tx]
    [metabase.test.data.sql :as sql.tx]
    [metabase.test.data.sql-jdbc :as sql-jdbc.tx]
@@ -121,5 +123,21 @@
   false)
 
 (defmethod driver/database-supports? [:materialize :test/timestamptz-type]
+  [_driver _feature _database]
+  false)
+
+(defmethod driver/database-supports? [:materialize ::describe-table-test/describe-materialized-view-fields]
+  [_driver _feature _database]
+  false)
+
+(defmethod driver/database-supports? [:materialize ::describe-table-test/describe-view-fields]
+  [_driver _feature _database]
+  false)
+
+(defmethod driver/database-supports? [:materialize :test/creates-db-on-connect]
+  [_driver _feature _database]
+  true)
+
+(defmethod driver/database-supports? [:materialize ::alternative-date-test/yyyymmddhhss-binary-timestamps]
   [_driver _feature _database]
   false)
