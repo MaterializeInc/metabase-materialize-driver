@@ -23,7 +23,7 @@ usage() {
     echo
     echo "Example:"
     echo
-    echo "$0 v0.52.11 /some/path/to/materialize.metabase-driver.jar my-metabase-with-materialize:v0.0.1"
+    echo "$0 v0.53.2 /some/path/to/materialize.metabase-driver.jar my-metabase-with-materialize:v0.0.1"
     exit 1
 }
 
