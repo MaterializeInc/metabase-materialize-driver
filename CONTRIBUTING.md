@@ -9,7 +9,7 @@
 
 * Clojure 1.11+
 * OpenJDK 21
-* Node.js 20.x
+* Node.js 22.x
 * Yarn
 
 For testing: Docker Compose
