@@ -10,6 +10,7 @@
    [metabase.driver.sql-jdbc.execute :as sql-jdbc.execute]
    [metabase.driver.sql-jdbc.sync.describe-table-test :as describe-table-test]
    [metabase.query-processor-test.alternative-date-test :as alternative-date-test]
+   [metabase.query-processor-test.date-bucketing-test :as date-bucketing-test]
    [metabase.test.data.interface :as tx]
    [metabase.test.data.sql :as sql.tx]
    [metabase.test.data.sql-jdbc :as sql-jdbc.tx]
@@ -141,3 +142,42 @@
 (defmethod driver/database-supports? [:materialize ::alternative-date-test/yyyymmddhhss-binary-timestamps]
   [_driver _feature _database]
   false)
+
+(defmethod  alternative-date-test/yyyymmddhhmmss-binary-dates-expected-rows :materialize
+  [_driver]
+  [[1 "foo" #t "2019-04-21T16:43"]
+   [2 "bar" #t "2020-04-21T16:43"]
+   [3 "baz" #t "2021-04-21T16:43"]])
+
+(defmethod  alternative-date-test/yyyymmddhhmmss-dates-expected-rows :materialize
+  [_driver]
+  [[1 "foo" #t "2019-04-21T16:43"]
+   [2 "bar" #t "2020-04-21T16:43"]
+   [3 "baz" #t "2021-04-21T16:43"]])
+
+
+(defmethod date-bucketing-test/group-by-default-test-expected-rows :materialize
+  [_driver]
+  [["2015-06-01T10:31:00Z" 1]
+   ["2015-06-01T16:06:00Z" 1]
+   ["2015-06-01T17:23:00Z" 1]
+   ["2015-06-01T18:55:00Z" 1]
+   ["2015-06-01T21:04:00Z" 1]
+   ["2015-06-01T21:19:00Z" 1]
+   ["2015-06-02T02:13:00Z" 1]
+   ["2015-06-02T05:37:00Z" 1]
+   ["2015-06-02T08:20:00Z" 1]
+   ["2015-06-02T11:11:00Z" 1]])
+
+(defmethod date-bucketing-test/group-by-default-test-2-expected-rows :materialize
+  [_driver]
+  [["2015-06-01T10:31:00Z" 1]
+   ["2015-06-01T16:06:00Z" 1]
+   ["2015-06-01T17:23:00Z" 1]
+   ["2015-06-01T18:55:00Z" 1]
+   ["2015-06-01T21:04:00Z" 1]
+   ["2015-06-01T21:19:00Z" 1]
+   ["2015-06-02T02:13:00Z" 1]
+   ["2015-06-02T05:37:00Z" 1]
+   ["2015-06-02T08:20:00Z" 1]
+   ["2015-06-02T11:11:00Z" 1]])

@@ -8,8 +8,6 @@
             [metabase.config :as config]
             [metabase.driver :as driver]
             [metabase.util :as u]
-            [metabase.query-processor-test.alternative-date-test :as alternative-date-test]
-            [metabase.query-processor-test.date-bucketing-test :as date-bucketing-test]
             [metabase.driver.sql-jdbc.execute :as sql-jdbc.execute]
             [metabase.driver.sql.query-processor :as sql.qp]
             [metabase.util.honey-sql-2 :as h2x]
@@ -205,41 +203,3 @@
    [:cast [:substring expr (int 9) (int 2)] :integer]
    [:cast [:substring expr (int 11) (int 2)] :integer]
    [:cast [:substring expr (int 13) (int 2)] :integer]])
-
-(defmethod  alternative-date-test/yyyymmddhhmmss-binary-dates-expected-rows :materialize
-  [_driver]
-  [[1 "foo" #t "2019-04-21T16:43"]
-   [2 "bar" #t "2020-04-21T16:43"]
-   [3 "baz" #t "2021-04-21T16:43"]])
-
-(defmethod  alternative-date-test/yyyymmddhhmmss-dates-expected-rows :materialize
-  [_driver]
-  [[1 "foo" #t "2019-04-21T16:43"]
-   [2 "bar" #t "2020-04-21T16:43"]
-   [3 "baz" #t "2021-04-21T16:43"]])
-
-(defmethod date-bucketing-test/group-by-default-test-expected-rows :materialize
-  [_driver]
-  [["2015-06-01T10:31:00Z" 1]
-   ["2015-06-01T16:06:00Z" 1]
-   ["2015-06-01T17:23:00Z" 1]
-   ["2015-06-01T18:55:00Z" 1]
-   ["2015-06-01T21:04:00Z" 1]
-   ["2015-06-01T21:19:00Z" 1]
-   ["2015-06-02T02:13:00Z" 1]
-   ["2015-06-02T05:37:00Z" 1]
-   ["2015-06-02T08:20:00Z" 1]
-   ["2015-06-02T11:11:00Z" 1]])
-
-(defmethod date-bucketing-test/group-by-default-test-2-expected-rows :materialize
-  [_driver]
-  [["2015-06-01T10:31:00Z" 1]
-   ["2015-06-01T16:06:00Z" 1]
-   ["2015-06-01T17:23:00Z" 1]
-   ["2015-06-01T18:55:00Z" 1]
-   ["2015-06-01T21:04:00Z" 1]
-   ["2015-06-01T21:19:00Z" 1]
-   ["2015-06-02T02:13:00Z" 1]
-   ["2015-06-02T05:37:00Z" 1]
-   ["2015-06-02T08:20:00Z" 1]
-   ["2015-06-02T11:11:00Z" 1]])
