@@ -12,7 +12,7 @@
 * Node.js 22.x
 * Yarn
 
-For testing: Docker Compose
+For testing: [Docker Compose](https://docs.docker.com/compose/install/)
 
 Please refer to the extensive documentation available on the Metabase website: [Guide to writing a Metabase driver](https://www.metabase.com/docs/latest/developers-guide/drivers/start.html)
 
