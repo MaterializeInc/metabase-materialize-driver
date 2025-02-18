@@ -9,10 +9,10 @@
 
 * Clojure 1.11+
 * OpenJDK 21
-* Node.js 20.x
+* Node.js 22.x
 * Yarn
 
-For testing: Docker Compose
+For testing: [Docker Compose](https://docs.docker.com/compose/install/)
 
 Please refer to the extensive documentation available on the Metabase website: [Guide to writing a Metabase driver](https://www.metabase.com/docs/latest/developers-guide/drivers/start.html)
 
@@ -24,7 +24,7 @@ The easiest way to set up a development environment is as follows (mostly the sa
 ```bash
 git clone https://github.com/metabase/metabase.git
 cd metabase
-git checkout v0.52.11
+git checkout v0.53.2
 git clone https://github.com/MaterializeInc/metabase-materialize-driver.git modules/drivers/materialize
 ```
 
