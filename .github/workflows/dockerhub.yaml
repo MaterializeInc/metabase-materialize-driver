@@ -17,13 +17,13 @@ jobs:
       contents: write
     steps:
       - name: Checkout Metabase Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: metabase/metabase
           ref: release-x.53.x
 
       - name: Checkout Driver Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: modules/drivers/materialize
 
