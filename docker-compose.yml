@@ -25,7 +25,7 @@ services:
       }
 
   metabase:
-    image: metabase/metabase:v0.53.2
+    image: metabase/metabase:v0.53.5
     container_name: metabase-with-materialize-driver
     environment:
       'MB_HTTP_TIMEOUT': '5000'
