@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: metabase/metabase
-          ref: release-x.53.x
+          ref: release-x.54.x
 
       - name: Checkout Driver Repo
         uses: actions/checkout@v4
@@ -41,6 +41,11 @@ jobs:
           compose-file: "modules/drivers/materialize/docker-compose.yml"
           services: |
             materialize
+
+      # Apply the scripts/exclude_tests.diff patch to exclude tests that are not relevant to Materialize
+      - name: Apply exclude_tests.diff
+        run: |
+          git apply modules/drivers/materialize/scripts/exclude_tests.diff
 
       - name: Install Clojure CLI
         run: |

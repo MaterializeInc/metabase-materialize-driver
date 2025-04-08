@@ -76,7 +76,7 @@
   [_ details]
   (let [merged-details (merge default-materialize-connection-details details)
         ;; TODO: get the driver version from the plugin manifest instead of hardcoding it
-        driver-version "v1.5.0"
+        driver-version "v1.6.0"
         app-name       (format "Metabase Materialize driver %s %s"
                              driver-version
                              config/mb-app-id-string)]

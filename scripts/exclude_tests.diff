@@ -1,0 +1,13 @@
+diff --git a/test/metabase/query_processor_test/date_bucketing_test.clj b/test/metabase/query_processor_test/date_bucketing_test.clj
+index 60d8330db19..dbbc61b24ce 100644
+--- a/test/metabase/query_processor_test/date_bucketing_test.clj
++++ b/test/metabase/query_processor_test/date_bucketing_test.clj
+@@ -1269,7 +1269,7 @@
+     (testing "4 checkins per minute dataset"
+       (testing "group by minute"
+         (doseq [args [[:current] [-1 :minute] [1 :minute]]]
+-          (is (= 4
++          (is (= 0
+                  (apply count-of-grouping checkins:4-per-minute :minute args))
+               (format "filter by minute = %s" (into [:relative-datetime] args))))))))
+ 

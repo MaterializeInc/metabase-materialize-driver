@@ -24,7 +24,7 @@ The easiest way to set up a development environment is as follows (mostly the sa
 ```bash
 git clone https://github.com/metabase/metabase.git
 cd metabase
-git checkout release-x.53.x
+git checkout release-x.54.x
 git clone https://github.com/MaterializeInc/metabase-materialize-driver.git modules/drivers/materialize
 ```
 
@@ -85,6 +85,16 @@ If you want to run tests for only a specific test:
 mz_deps=$(cat modules/drivers/materialize/.github/deps.edn | sed -e "s|PWD|$PWD|g" | tr -d '\n')
 DRIVERS=materialize clojure -Sdeps ${mz_deps} -X:dev:drivers:drivers-dev:test:user/materialize :only metabase.query-processor.middleware.parameters.mbql-test
 ```
+
+## Excluding tests
+
+Some tests are not applicable to Materialize, and you can exclude them by adding the following to the test command:
+
+```bash
+git apply modules/drivers/materialize/scripts/exclude_tests.diff
+```
+
+The diff file contains the list of tests that are excluded from the Materialize driver. This often needs to be updated as new tests are added to new Metabase versions.
 
 ## Building a jar
 
