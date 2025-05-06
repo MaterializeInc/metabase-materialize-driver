@@ -6,15 +6,13 @@ The `metabase-materialize-driver` lets
 [Metabase](https://github.com/metabase/metabase) connect to an instance of
 [Materialize](https://github.com/MaterializeInc/materialize).
 
+> [!NOTE]
+> With improvements to Materialize's PostgreSQL compatibility, you can now connect to Materialize directly using Metabase's default PostgreSQL driver.
+> See the guide here: [Using Materialize with Metabase](https://materialize.com/docs/serve-results/metabase/).
+
 ![Choose Materialize from database dropdown](https://github-production-user-asset-6210df.s3.amazonaws.com/21223421/268976090-6ed5b4b0-abb0-48dc-862f-b2284cb878d7.png)
 
 ## To Use the Driver
-
-### With Metabase Cloud
-
-As a Metabase partner driver, the Materialize driver is
-included in [Metabase Cloud](https://www.metabase.com/docs/latest/cloud/start) offering.
-To use it, simply select Materialize from the database dropdown when adding a new database.
 
 ### With Docker
 
